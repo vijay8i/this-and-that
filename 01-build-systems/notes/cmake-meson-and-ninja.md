@@ -1,6 +1,9 @@
 # Is there such a thing as a perfect build system?
 (thoughts in progress...)
 
+> Be sure to read the [epilog](#epilog) for I discovered that I did not
+> RTFM enough on the Meson docs and issues. Still my rant has some merit
+
 An elegant build framework that I have used in the past is `waf.io` and
 it worked well for my use cases. I wrote my build tasks in `Python` using
 as all the features of the language as needed. I had to  stick to a few 
@@ -111,7 +114,8 @@ Getting started with *meson* seemed easy enough. Took only couple of
 # install meson using pip3
 pip3 install --user meson
 source ~/.bash_profile
-# export PROJECT_ROOT=$HOME/path/to/project/root
+# export PROJECT_ROOT=$HOME/path/to/project/root  (OR)
+# export PROJECT_ROOT=`pwd`
 # and then from 3p/uvw do the following 
 meson setup --reconfigure -Dprefix=$PROJECT_ROOT/3p/local build
 ninja -C build install
@@ -169,6 +173,8 @@ executable(
 With that in place, now I got meson and ninja to do their thing:
 
 ```sh
+# export PROJECT_ROOT=$HOME/path/to/project/root
+# In $PROJECT_ROOT/experiments/using-uvw 
 meson setup --reconfigure build
 ninja -C build
 ```
@@ -312,8 +318,31 @@ program. I don't know when I will get to it, but you can read about
 it when I do by either pulling the  RSS feed or signing up to our 
 newsletter.
 
+## Epilog
+To be able to override the default compiler that *meson* uses, one must
+set `CC`, `CC_FOR_BUILD`, `CXX`, and `CXX_FOR_BUILD` vars on CLI like so:
+```bash
+CC=`which clang` CC_FOR_BUILD=`which clang` CXX=`which clang++` CXX_FOR_BUILD=`which clang++` meson setup --reconfigure -Dprefix=$PROJECT_ROOT/3p/local build
+```
+
+I made the mistake of setting only `CC` and `CC_FOR_BUILD`, conveniently
+ignoring the fact that I was trying to build C++ code. So most of my rant
+was for nothing, and can be brushed away as a skills issue. :roll_eyes:, sigh!
+
+Still, the pitfalls exist. 
+
+You have to remember to `rm -rf build` to ensure that environment 
+variables get picked up and get used. And why can't I set the environment
+variables for `executable` or `project`? And many more questions as I 
+tried to get things to work. I hear you; it's open source. So use it,
+or don't, or fix it; just don't complain. Fair enough. At this point,
+I will have to explore `gn` before I can arrive at a conclusion on 
+which way to go.
+
+
 ## References:
-[Ninja build tool](https://lwn.net/Articles/706404/)
-[Node Addon using Ninja](https://stackoverflow.com/questions/58633310/how-to-compile-node-js-native-api-extension-via-meson-build-system)
-[Define dependency not found using `pkg-config`](https://stackoverflow.com/questions/47010355/mesonbuild-how-to-define-dependency-to-a-library-that-cannot-be-found-by-pkg-c)
-[Meson monorepo for individual subproject builds](https://embeddedartistry.com/blog/2023/06/05/meson-pattern-monorepo-that-supports-individual-subproject-builds/)
+- [Ninja build tool](https://lwn.net/Articles/706404/)
+- [Node Addon using Ninja](https://stackoverflow.com/questions/58633310/how-to-compile-node-js-native-api-extension-via-meson-build-system)
+- [Define dependency not found using `pkg-config`](https://stackoverflow.com/questions/47010355/mesonbuild-how-to-define-dependency-to-a-library-that-cannot-be-found-by-pkg-c)
+- [Meson monorepo for individual subproject builds](https://embeddedartistry.com/blog/2023/06/05/meson-pattern-monorepo-that-supports-individual-subproject-builds/)
+- [Setting CC and CXX on CLI for Meson](https://github.com/mesonbuild/meson/issues/7284#issuecomment-641660087)
