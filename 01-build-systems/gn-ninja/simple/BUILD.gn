@@ -1,0 +1,10 @@
+# Include the subdirectories that contain the actual targets.
+group("everything") {
+  deps = [
+    "//src/lib:ss-static",
+    "//src/lib:ss-shared",
+
+    "//src/app:app-static",
+    "//src/app:app-shared",
+  ]
+}

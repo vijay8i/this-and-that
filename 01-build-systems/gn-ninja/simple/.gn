@@ -1,0 +1,2 @@
+# Set up the build output directory.
+buildconfig = "//build/BUILDCONFIG.gn"
