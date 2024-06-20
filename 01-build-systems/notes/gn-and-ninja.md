@@ -80,7 +80,7 @@ $ gn gen out/simple
 $ ninja -C out/simple
 ```
 
-Now that the basic objective has been met, I felt a bit more adventerous. My first venturing on my own into the *gn* world was to figure out how
+Now that the basic objective has been met, I felt a bit more adventurous. My first venturing on my own into the *gn* world was to figure out how
 keep my *BUILD.gn* files `DRY`. Here is what I mean; the first iteration
 of my `app`'s *BUILD.gn* looked as below:
 
