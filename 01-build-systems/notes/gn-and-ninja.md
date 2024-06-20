@@ -290,7 +290,7 @@ Average: 3.00
 Median: 3.00
 ```
 
-Nice. With this initial experience I think I am ready to go the distance with *gn* and take on the `ad-hoc` project which has a few challenges like fetching third party dependency (`uvw`) that in turn depends `uv`. And to make it interesting, I did not follow the suggested guidelines of *meson* to use *subprojects*.
+Nice. With this initial experience I think I am ready to go the distance with *gn* and take on the `ad-hoc` project which has a few challenges like fetching third party dependency (`uvw`) that in turn depends on `uv`. And to make it interesting, I did not follow the suggested guidelines of *meson* to use *subprojects*.
 
 Stay tuned for Part III.
 

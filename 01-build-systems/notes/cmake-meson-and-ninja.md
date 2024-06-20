@@ -23,7 +23,7 @@ in the world of open source where developers are trying to mix and match
 various components/libraries of their choice, I think this quirk introduces
 complexity in unknown ways. But if your software is completely built
 within the organization and only the executables are distributed, then
-*waf.io* is good choice if you value flexibility and maintainability
+*waf.io* is a good choice if you value flexibility and maintainability
 over raw build performance.
 
 If performance is the main concern then a two step build pipeline is
@@ -41,7 +41,7 @@ in parallel.
 
 While such an assembly file can be written by hand, Ninja leaves the DX
 to other tools such as CMake and Meson. In other words you need loops
-and conditionals to create the assembly artefact for *ninja* to chomp at.
+and conditionals to create the assembly of instructions for *ninja* to chomp at to produce the artefacts (executables, libraries, docs, ...) 
 
 For step 1, the most popular choice is *cmake*. But `CMakeLists.txt`
 syntax is simply not for me; it gives me allergies. I get it that it is
@@ -53,14 +53,13 @@ same result. Or at the very least use syntax that doesn't require a
 cognitive context switch.
 
 Internet told me that *meson* is the next closest thing that fits my
-taste; its syntax is pythonic and often seen in use with *ninja* foss
-projects.
+taste; its syntax is pythonic and often seen in use with *ninja* in 
+many foss projects.
 
-So I decided to investigate this duo for an upcoming open source project
-that I have in mind. The rest of the article is my experience in 
-getting a simple program in C++ built with a couple of 3rd party library
-dependencies. It gets technical beyond this point.
-
+So I decided to investigate this duo in preparation for an upcoming
+open source project that I have in mind. The rest of this article goes
+into the details of getting a simple program in C++ built with a couple
+of 3rd party library dependencies. It gets technical beyond this point.
 
 ## Using `meson` and `ninja`
 Consider the project tree structure below. It is adhoc and I started 
@@ -104,8 +103,8 @@ quickly start *suggesting* how to setup the project structure the way
 I had two alternatives: resort to using a Makefile or learn more on how
 to make it work with either *cmake* or *meson*. Make is wild; and I have
 enough scars to remind me to not go near it. Given my dislike for
-*cmake*'s DSL, and considering *meson*'s DSL is closer to python, I 
-decided to go down the rabbit hole with it.
+*cmake*'s DSL, and considering *meson*'s DSL is closer to Python, I 
+decided to go with *meson*.
 
 Getting started with *meson* seemed easy enough. Took only couple of 
 `RTFM` minutes.
@@ -192,15 +191,16 @@ So now I have to chase down two problems: why *meson* was generating
 *ninja.build* with wrong compiler options, and how to make *ninja* use
 a compiler that is not the system default. 
 
-Here we we go again down another rabbit hole. The output of *ninja* 
-showed that it was using `c++` and a quick `which c++` told me that my
-`c++` doesn't point to `clang++` which supports the 2023 features that
-I want.
+This sure looked like a rabbit hole to me and it was. The output of 
+*ninja* showed that it was using `c++` and a quick `which c++` told
+me that my `c++` doesn't point to `clang++` which supports the 2023
+features that I want.
 
 I could either change the system `c++` default or somehow figure out
 how to make meson and ninja talk to each other on which compiler to
 use &mdash; the fear of the unknown long term pain vs short term pain?
-Take the short term pain when you can handle it, always.
+
+> Take the short term pain when you can handle it, always.
 
 I thought I could smartypant my way out by setting environment variables
 in the script file as below:
@@ -213,7 +213,8 @@ env.set('CC', '/opt/local/bin/clang++')
 env.set('CC_FOR_BUILD', '/opt/local/bin/clang++')
 ```
 
-Disappointingly that did not work.
+Disappointingly that did not work because `executable()` doesn't 
+pick up the environment nor does it accept it as an argument.
 
 ```shell
 C++ compiler for the host machine: c++ (clang 15.0.0 "Apple clang version 15.0.0 (clang-1500.1.0.2.5)")
@@ -228,11 +229,19 @@ CC=/opt/local/bin/clang++ meson setup build
 # neither does this :-(
 CC_FOR_BUILD=/opt/local/bin/clang++ meson setup build
 ```
+> see [epilog](#epilog); I did not set `CXX` and `CXX_FOR_BUILD` at 
+> this step; would have save me 30 minutes if did properly RTFM.
 
 I finally had to use the `--native-file` option, which at first did not
-work. Since I ran out of options and out of habit I did `rm -rf build`;
-and suddenly it starts working. This did not give me the good vibes I
-was hoping to get out of *meson*.
+work &mdash; for like 30 minutes I was scratching my head and feverishly
+searching `SO`. Since I ran out of options, and since there was nothing
+else to try, I went for `rm -rf build`; and like magic it works. While
+I am thrilled that it worked, it did not give me the good vibes I was
+hoping to get out of *meson*.
+
+> Cache can be your friend, cache can be your worst enemy!
+> It can save you time and suck away time if you ignore it.
+> It can... okay you get the point.
 
 Fwiw, here is the native file.
 ```ini
@@ -307,7 +316,7 @@ and that is fricking cool.
 
 In summary, my hunt for a perfect build system for C/C++ projects is not
 over. I really hoped that `meson` would be it. Unfortunately it is not
-because imo, it violates the `principle of least surprise` step after
+because imo it violates the `principle of least surprise` step after
 step after a mere few steps of using it.
 
 For a harried developer who just wants to build software, that is 
@@ -334,12 +343,12 @@ Still, the pitfalls exist.
 
 You have to remember to `rm -rf build` to ensure that environment 
 variables get picked up and get used. And why can't I set the environment
-variables for `executable` or `project`? And many more questions as I 
-tried to get things to work. I hear you; it's open source. So use it,
-or don't, or fix it; just don't complain. Fair enough. At this point,
-I will have to explore `gn` before I can arrive at a conclusion on 
-which way to go.
+variables for `executable` or `project`? And many more questions arose
+as I tried to get things to work. 
 
+I hear you; it's open source. So use it, or don't, or fix it; just don't
+complain. Fair. At this point, I will have to explore `gn` before I can
+arrive at a conclusion on which way to go.
 
 ## References:
 - [Ninja build tool](https://lwn.net/Articles/706404/)
