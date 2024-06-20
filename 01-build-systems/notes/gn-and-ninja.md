@@ -1,14 +1,30 @@
 # Is there such a thing as a perfect build system? (Part II)
 (thoughts in progress...)
 
+In Part I, I explored `meson` with `ninja` in my quest to find the 
+perfect build system that works for me. To be clear, there was no
+audition done for *ninja*; it was simply accepted for the role of
+chomping through a build file (reductive and potentially insulting
+simplification here). I mean when the scope is limited, there's fewer
+ways to go screw up; *ninja* just does its job and stays out of your
+way. Good for *ninja* and that's all there is to be said about *ninja*.
 
-In Part I, I explored `meson` with `ninja`. When scope is limited, 
-there's fewer ways to screw up; `ninja` just does its job and stays
-out of your way. Good for *ninja* but the real hardwork is done by
-the *meta* build tools &mdash; focus of this *series* &mdash; such as `cmake`, `meson` and `gn`. And boy 
-it's a hard job to get it right across so many dimensions. I realize
-I was overly critical of *meson*; so fwiw and for the record, let me say that I respect how much one can accomplish using *meson* with just  a day's worth of RTFM (I know, I am a slow
-reader).
+The search &mdash; focus for this *series* &mdash; is to find the right
+artist to take on the role of a `meta build tool`. That is a tough role
+requiring real hardwork; the artists that made it to the final list were
+`cmake`, `meson`, and `gn`. Sorry to say but `cmake` was sent home out
+of *prejudice*, and without a doubt I know that decision might very 
+well come back and bite me &ndash; someday.
+
+The role of a *meta build tool* is complex and multidimensional. To 
+*play* it well requires knowledge of operating systems, compilers,
+programming languages, linkers, and tools. Which makes it hard to appease
+all developers of diverse experience levels.
+
+> I realize I was overly critical of *meson*; so fwiw and for the
+> record, let me say that I respect how much one can accomplish
+> using *meson* with just  a day's worth of RTFM (I know, I am a 
+> slow reader).
 
 I left Part I concluding that `meson` is not for me; and that I have
 to explore `gn` + `ninja` combo someday in my quest to find the perfect
@@ -17,12 +33,14 @@ build system. And that someday is today.
 ## Learning from experience
 Getting things working with *meson* for an ad-hoc project structure
 turned out to be a wee bit of an adventure. That is to be expected
-when diving sans planning. I did that only because at the surface level
-I was able to map the the *DSL* of *meson* to that of *cmake* which I had experience with; how hard could that be :roll_eyes:.
+when diving in sans planning. I did that because at the surface level
+I was able to map the the *DSL* of *meson* to that of *cmake* which I
+had experience with; how hard could that be :roll_eyes:.
 
 On the other hand, *gn*'s DSL at a first glance looked different enough
-for me to start with something simple to follow along till I got the
-hang of it. So the `simple` project folder structure looks as below. The objective is to build a static and shared library out of `lib` folder
+for me to start with something `simple` to follow along till I got the
+hang of it. The *simple* project folder structure looks as below. The
+objective is to build a static and shared library out of `lib` folder
 and a statically linked and dynamically linked executable out of `app`
 folder.
 
@@ -51,10 +69,14 @@ The general concepts in *gn* are similar to *cmake* and *meson* &mdash;
 create a directory structure that breaks the system into subsystems, 
 functional blocks (features) and modules (components); and then describe
 what each folder contains in a `BUILD.gn` file in that folder. Each 
-target (defined in *BUILD.gn*) can be referenced as a dependency by others, and the target can declare its own dependencies. At the top level, create one or more `group` of features
-and declare the dependencies for each. Btw, the `group` name becomes a target that can be used to direct `ninja` what to build.
+target (defined in *BUILD.gn*) can be referenced as a dependency by 
+others, and the target can declare its own dependencies. At the top level,
+create one or more `group` of features and declare the dependencies for
+each. Btw, the `group` name becomes a target that can be used to direct
+`ninja` what to build.
 
 > Remember to design your build like code.
+> - Brett Wilson
 
 The first thing I took note of and appreciated is that *gn* automatically
 looks for and picks up the values in `.gn` file unlike *meson*'s 
@@ -80,7 +102,8 @@ $ gn gen out/simple
 $ ninja -C out/simple
 ```
 
-Now that the basic objective has been met, I felt a bit more adventurous. My first venturing on my own into the *gn* world was to figure out how
+Now that the basic objective has been met, I felt a bit more adventurous.
+My first venturing on my own into the *gn* world was to figure out how
 keep my *BUILD.gn* files `DRY`. Here is what I mean; the first iteration
 of my `app`'s *BUILD.gn* looked as below:
 
@@ -290,11 +313,16 @@ Average: 3.00
 Median: 3.00
 ```
 
-Nice. With this initial experience I think I am ready to go the distance with *gn* and take on the `ad-hoc` project which has a few challenges like fetching third party dependency (`uvw`) that in turn depends on `uv`. And to make it interesting, I did not follow the suggested guidelines of *meson* to use *subprojects*.
+Nice. With this initial experience I think I am ready to go the distance
+with *gn* and take on the `ad-hoc` project which has a few challenges
+like fetching third party dependency (`uvw`) that in turn depends on
+`uv`. And to make it interesting, I did not follow the suggested 
+guidelines of *meson* to use *subprojects*.
 
 Stay tuned for Part III.
 
 
 # References
+- [Using GN build, Artisanl metabuild](https://docs.google.com/presentation/d/15Zwb53JcncHfEwHpnG_PoIbbzQ3GQi_cpujYwbpcbZo/edit#slide=id.g119d702868_0_12)
 - [GN Reference](https://gn.googlesource.com/gn/+/master/docs/reference.md#buildargs)
 - [Best practices for writing GN templates, Fuchsia](https://fuchsia.dev/fuchsia-src/development/build/build_system/best_practices_templates)
