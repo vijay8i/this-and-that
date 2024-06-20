@@ -1,7 +1,7 @@
-# Is there such a thing as a perfect build system?
+# Is there such a thing as a perfect build system? (Part I)
 (thoughts in progress...)
 
-> Be sure to read the [epilog](#epilog) for I discovered that I did not
+> Be sure to read the [epilog](#epilog); I found out I did not
 > RTFM enough on the Meson docs and issues. Still my rant has some merit
 
 An elegant build framework that I have used in the past is `waf.io` and
@@ -207,6 +207,7 @@ in the script file as below:
 
 ```python
 # set the compiler to use (doesn't work!)
+# because there is no way to pass the env to build the executable()
 env = environment()
 env.set('CC', '/opt/local/bin/clang++')
 env.set('CC_FOR_BUILD', '/opt/local/bin/clang++')
@@ -280,7 +281,7 @@ Speaking of opinions I have a few of my own from the whole ordeal.
 
 My first impression of *meson* is that it baked into its implementation
 some strong opinions that most likely were truthy at some point in time,
-and probably served the authors of *meson** well on their job. At present
+and probably served the authors of *meson* well on their job. At present
 times however, it just feels odd to embrace those opinions. 
 
 I can buy into the convention over configuration argument; but I have
@@ -346,3 +347,4 @@ which way to go.
 - [Define dependency not found using `pkg-config`](https://stackoverflow.com/questions/47010355/mesonbuild-how-to-define-dependency-to-a-library-that-cannot-be-found-by-pkg-c)
 - [Meson monorepo for individual subproject builds](https://embeddedartistry.com/blog/2023/06/05/meson-pattern-monorepo-that-supports-individual-subproject-builds/)
 - [Setting CC and CXX on CLI for Meson](https://github.com/mesonbuild/meson/issues/7284#issuecomment-641660087)
+- [Modern CMake, please stop using old cmake syntax](https://cliutils.gitlab.io/modern-cmake/)

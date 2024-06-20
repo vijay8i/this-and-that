@@ -10,6 +10,9 @@
 ## Typedef vs using 
 - https://stackoverflow.com/questions/10747810/what-is-the-difference-between-typedef-and-using
 
+## Expected
+- https://andreasfertig.blog/2022/09/cpp23-stdexpected-the-superior-way-of-returning-a-value-or-an-error/
+
 ## SFINAE
 - https://www.cppstories.com/2016/02/notes-on-c-sfinae/
 

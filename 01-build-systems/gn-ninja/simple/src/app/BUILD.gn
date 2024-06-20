@@ -1,18 +1,15 @@
-cflags = []
-cflags += [ "-std=c++23" ]
-lib_dirs = []
-lib_dirs += [ "/opt/local/libexec/llvm-18/lib" ]
-ldflags = []
-ldflags += [ "-Wl,-rpath,/opt/local/libexec/llvm-18/lib" ]
-
 executable("app-static") {
   sources = [ "main.cc" ]
-  deps = [ "//src/lib:ss-shared" ]
+  deps = [ "//src/lib:ss-static" ]
   include_dirs = [ "../lib" ]
+
+  defines = [ "STATS_API_IS_DLL=0" ]
 }
 
 executable("app-shared") {
   sources = [ "main.cc" ]
-  deps = [ "//src/lib:ss-static" ]
+  deps = [ "//src/lib:ss-shared" ]
   include_dirs = [ "../lib" ]
+
+  defines = [ "STATS_API_IS_DLL=1" ]
 }

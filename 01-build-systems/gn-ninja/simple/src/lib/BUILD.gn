@@ -1,13 +1,9 @@
-cflags = []
-cflags += [ "-std=c++23" ]
-
 shared_library("ss-shared") {
   sources = [
     "simple-stats.cc",
     "simple-stats.hh",
   ]
-
-  defines = [ "STATS_SHARED_LIBRARY" ]
+  defines = [ "STATS_API_BUILD_AS_SHARED_LIB" ]
 }
 
 static_library("ss-static") {
@@ -15,4 +11,5 @@ static_library("ss-static") {
     "simple-stats.cc",
     "simple-stats.hh",
   ]
+  defines = [ "STATS_API_BUILD_AS_STATIC_LIB" ]
 }

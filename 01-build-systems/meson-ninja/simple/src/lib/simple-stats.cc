@@ -4,6 +4,11 @@
 #include <ranges>
 #include <numeric>
 
+#if defined(STATS_SHARED_LIBRARY)
+#pragma message ( "compiling .lib")
+#else
+#pragma message ( "compiling .so")
+#endif
 namespace ss {
   using namespace std;
 

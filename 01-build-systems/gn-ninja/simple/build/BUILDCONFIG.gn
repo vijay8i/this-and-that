@@ -22,14 +22,27 @@ set_defaults("executable") {
 
   # Executables get this additional configuration.
   configs += [ "//build:executable_ldconfig" ]
+
+  # Add "bleeding-edge" as default
+  configs += [ "//build:bleeding-edge" ]
 }
+
 set_defaults("static_library") {
   configs = _shared_binary_target_configs
+
+  # Add "bleeding-edge" as default
+  configs += [ "//build:bleeding-edge" ]
 }
+
 set_defaults("shared_library") {
   configs = _shared_binary_target_configs
+
+  # Add "bleeding-edge" as default
+  configs += [ "//build:bleeding-edge" ]
 }
+
 set_defaults("source_set") {
   configs = _shared_binary_target_configs
 }
+
 set_default_toolchain("//build/toolchain:clang")

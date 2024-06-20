@@ -6,6 +6,7 @@ config("compiler_defaults") {
     ]
   }
 }
+
 config("executable_ldconfig") {
   if (!is_mac) {
     ldflags = [
@@ -13,4 +14,11 @@ config("executable_ldconfig") {
       "-Wl,-rpath-link=",
     ]
   }
+}
+
+# bleeding-edge config to stay on the latest clang toolchain and C++
+config("bleeding-edge") {
+  cflags = [ "-std=c++23" ]
+  lib_dirs = [ "/opt/local/libexec/llvm-18/lib" ]
+  ldflags = [ "-Wl,-rpath,/opt/local/libexec/llvm-18/lib" ]
 }
