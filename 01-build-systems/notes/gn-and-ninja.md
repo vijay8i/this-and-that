@@ -76,7 +76,7 @@ each. Btw, the `group` name becomes a target that can be used to direct
 `ninja` what to build.
 
 > Remember to design your build like code.
-> - Brett Wilson
+> &mdash; Brett Wilson
 
 The first thing I took note of and appreciated is that *gn* automatically
 looks for and picks up the values in `.gn` file unlike *meson*'s 
