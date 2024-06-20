@@ -45,7 +45,7 @@ simple
         └── simple-stats.hh
 ```
 
-I started with the [quick start document][^1] and worked my way through.
+I started with the [quick start document](^1) and worked my way through.
 
 The general concepts in *gn* are similar to *cmake* and *meson* &mdash; 
 create a directory structure that breaks the system into subsystems, 
