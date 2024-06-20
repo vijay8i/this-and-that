@@ -230,7 +230,7 @@ CC=/opt/local/bin/clang++ meson setup build
 CC_FOR_BUILD=/opt/local/bin/clang++ meson setup build
 ```
 > see [epilog](#epilog); I did not set `CXX` and `CXX_FOR_BUILD` at 
-> this step; would have save me 30 minutes if did properly RTFM.
+> this step; would have saved me 30 minutes if did properly RTFM.
 
 I finally had to use the `--native-file` option, which at first did not
 work &mdash; for like 30 minutes I was scratching my head and feverishly
