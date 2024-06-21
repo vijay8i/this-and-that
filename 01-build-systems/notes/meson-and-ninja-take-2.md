@@ -132,11 +132,12 @@ are subjective or objective.
   code right there. Colocation and locality of reference seems to be a
   lost idea in documentation. The concept of literate programming equally
   works well for literate documentation.
-- Building a *build metatool* is hard and there are trade-offs. I think
-  *meson* distributes complexity while *gn* concentrates it and forces you to 
-  deal with it first. Once you get past the difficult job of figuring
-  out the config of your toolchain, the rest of the code (that builds code)
-  seems to all fit well together (conceptually and syntactically)
+- Creating a brand new *build metatool* is hard and there are trade-offs.
+  I think *meson* distributes complexity while *gn* concentrates it and
+  forces you to deal with it first. Once you get past the difficult job
+  of figuring out the config of your toolchain, the rest of the code
+  (that builds code) seems to all fit well together (conceptually and
+  syntactically)
 
 Now. I still have not managed to build `ad-hoc` project using *gn* which
 I think will be the litmus test for me to make the final call. 
