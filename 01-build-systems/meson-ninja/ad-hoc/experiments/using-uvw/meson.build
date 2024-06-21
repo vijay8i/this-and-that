@@ -43,8 +43,8 @@ uvw_dep = declare_dependency(
   link_args: ['-L' + local_lib_dir, '-luvw']
 )
 
-# using install_rpath doesn't work, so ignore the warning you get
-# from meson
+# using install_rpath doesn't work, so ignore the warning from meson
+# or educate me on how to make it work!
 executable(
   'main', 'main.cpp', 
   dependencies: [uvw_dep, libuv_dep],

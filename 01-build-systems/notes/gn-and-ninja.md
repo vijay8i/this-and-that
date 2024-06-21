@@ -107,7 +107,7 @@ My first venturing on my own into the *gn* world was to figure out how
 keep my *BUILD.gn* files `DRY`. Here is what I mean; the first iteration
 of my `app`'s *BUILD.gn* looked as below:
 
-```gn
+```lua
 cflags = []
 cflags += [ "-std=c++23" ]
 lib_dirs = []
@@ -127,6 +127,8 @@ executable("app-shared") {
   include_dirs = [ "../lib" ]
 }
 ```
+> PS: found a neat trick to highlight *gn* syntax by setting the fence
+> block's language to be `lua`. :shushing_face:
 
 Clearly having to repeat `cflags`, `lib_dirs`, `ld_flags` and more for
 each target is not *DRY* at all. Intuitively, I thought it should be
@@ -139,7 +141,7 @@ better than implicit (provided it is logical and consistent). Here is
 how that looks like. 
 
 In `simple/BUILD.gn` we define our `bleeding-edge` config:
-```gn
+```lua
 # Define a common config
 config("bleeding-edge") {
   cflags = [ "-std=c++23" ]
@@ -150,7 +152,7 @@ config("bleeding-edge") {
 
 And elsewhere (e.g`simple/src/app/BUILD.gn`) we use `bleeding-edge`
 config like so:
-```gn
+```lua
 executable("app-static") {
   sources = [ "main.cc" ]
   deps = [ "//src/lib:ss-shared" ]
@@ -164,7 +166,7 @@ So the next step is to see if we can define `bleeding-edge` config in
 `build/BUILD.gn` and let `build/BUILDCONFIG.gn` make use of it in
 `set_defaults` like so:
 
-```gn
+```lua
 set_defaults("executable") {
   ...
   # Add "bleeding-edge" to defaults
@@ -241,8 +243,25 @@ Since both the library developer and the user of the library is me, and
 since this article is about using *gn*, let me just dump the `app` and
 `lib` targets here so we can wrap up on a positive note.
 
-The app targets (`simple/src/app/BUILD.gn`) first:
-```gn
+First the root file `simple/BUILD.gn`...
+```lua
+group("simple") {
+  deps = [
+    "//src/app:app-shared",
+    "//src/app:app-static",
+    "//src/lib:ss-shared",
+    "//src/lib:ss-static",
+  ]
+}
+```
+
+Next the bootstrap file to inform *gn* where toolchain config is (`simple/.gn`):
+```lua
+buildconfig = "//build/BUILDCONFIG.gn"
+```
+
+The app targets (`simple/src/app/BUILD.gn`):
+```lua
 executable("app-static") {
   sources = [ "main.cc" ]
   deps = [ "//src/lib:ss-static" ]
@@ -260,20 +279,18 @@ executable("app-shared") {
 }
 ```
 
-And the lib targets (`simple/src/lib/BUILD.gn`) next:
-```gn
+The lib targets (`simple/src/lib/BUILD.gn`):
+```lua
 shared_library("ss-shared") {
   sources = [
-    "simple-stats.cc",
-    "simple-stats.hh",
+    "simple-stats.cc"
   ]
   defines = [ "STATS_API_BUILD_AS_SHARED_LIB" ]
 }
 
 static_library("ss-static") {
   sources = [
-    "simple-stats.cc",
-    "simple-stats.hh",
+    "simple-stats.cc"
   ]
   defines = [ "STATS_API_BUILD_AS_STATIC_LIB" ]
 }
@@ -320,7 +337,6 @@ like fetching third party dependency (`uvw`) that in turn depends on
 guidelines of *meson* to use *subprojects*.
 
 Stay tuned for Part III.
-
 
 # References
 - [Using GN build, Artisanl metabuild](https://docs.google.com/presentation/d/15Zwb53JcncHfEwHpnG_PoIbbzQ3GQi_cpujYwbpcbZo/edit#slide=id.g119d702868_0_12)

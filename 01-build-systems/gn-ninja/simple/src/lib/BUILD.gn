@@ -1,15 +1,9 @@
 shared_library("ss-shared") {
-  sources = [
-    "simple-stats.cc",
-    "simple-stats.hh",
-  ]
+  sources = [ "simple-stats.cc" ]
   defines = [ "STATS_API_BUILD_AS_SHARED_LIB" ]
 }
 
 static_library("ss-static") {
-  sources = [
-    "simple-stats.cc",
-    "simple-stats.hh",
-  ]
+  sources = [ "simple-stats.cc" ]
   defines = [ "STATS_API_BUILD_AS_STATIC_LIB" ]
 }

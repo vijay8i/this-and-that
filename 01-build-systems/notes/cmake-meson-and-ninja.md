@@ -41,7 +41,8 @@ in parallel.
 
 While such an assembly file can be written by hand, Ninja leaves the DX
 to other tools such as CMake and Meson. In other words you need loops
-and conditionals to create the assembly of instructions for *ninja* to chomp at to produce the artefacts (executables, libraries, docs, ...) 
+and conditionals to create the assembly of instructions for *ninja* to
+chomp at to produce the artefacts (executables, libraries, docs, ...) 
 
 For step 1, the most popular choice is *cmake*. But `CMakeLists.txt`
 syntax is simply not for me; it gives me allergies. I get it that it is
