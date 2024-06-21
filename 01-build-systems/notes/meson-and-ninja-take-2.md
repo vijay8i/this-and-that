@@ -122,21 +122,21 @@ ss_static = static_library(
 
 Having gone through this exercise I genuinely think investing time into
 *gn* is the better path to take. It is an opinion and if you press me
-as to why I think that I won't be able to give you an objective answer.
+as to why I think that, I won't be able to give you an objective answer.
 But I think I can offer up two thoughts and you can decide if they
 are subjective or objective.
 - The documentation of *gn* is way better than *meson*. The reference
   manual of *gn* is in one big page and I can simply use the browser's
   find function to find the whereabouts of what I am looking for fast;
   and when I get there I find not only a good description but also example
-  code right there. Colocation and locality of reference seemsto be a
+  code right there. Colocation and locality of reference seems to be a
   lost idea in documentation. The concept of literate programming equally
   works well for literate documentation.
-- Building build metatool is hard and there are trade-offs. I think *meson*
-  distributes complexity while *gn* concentrates it and forces you to 
+- Building a *build metatool* is hard and there are trade-offs. I think
+  *meson* distributes complexity while *gn* concentrates it and forces you to 
   deal with it first. Once you get past the difficult job of figuring
   out the config of your toolchain, the rest of the code (that builds code)
-  seems to all fit well together.
+  seems to all fit well together (conceptually and syntactically)
 
 Now. I still have not managed to build `ad-hoc` project using *gn* which
 I think will be the litmus test for me to make the final call. 
