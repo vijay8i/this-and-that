@@ -1,0 +1,18 @@
+import("//build/common/pkg_config.gni")
+
+pkg_config("target_defaults") {
+  pkg_deps_path = "//third-party"  # project root absolute
+
+  # pkg_deps_path = "third-party" # relative to this folder
+
+  # order matters (if the packages have dependencies)
+  pkg_deps = [
+    "libuv-static",
+    "uvw",
+  ]
+}
+
+executable("main") {
+  sources = [ "main.cc" ]
+  configs += [ ":target_defaults" ]
+}

@@ -1,7 +1,7 @@
 # Is there such a thing as a perfect build system? (Part III)
 (thoughts in progress...)
 
-I Part II, I left my quest to find a perfect build system (that meets my
+In Part II, I left my quest to find a perfect build system (that meets my
 requirements and preferences) wanting to move forward building the 
 `ad-hoc` project with *gn* to compare with the experience of building
 the same using *meson*.
@@ -139,8 +139,8 @@ are subjective or objective.
   (that builds code) seems to all fit well together (conceptually and
   syntactically)
 
-Now. I still have not managed to build `ad-hoc` project using *gn* which
-I think will be the litmus test for me to make the final call. 
+Now, I still have not built the `ad-hoc` project (yet) using *gn* which
+I think will be the litmus test for me to make the final call.
 
 <!-- live references -->
 [^1]: https://mesonbuild.com/Tutorial.html

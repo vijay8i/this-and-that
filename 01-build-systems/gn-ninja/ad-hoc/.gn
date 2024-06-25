@@ -1,0 +1,5 @@
+# This file is used by GN to find the root of the source tree and to
+# set startup options.
+
+buildconfig = "//build/BUILDCONFIG.gn"
+exec_script_whitelist = [ "build/common/pkg_config.gni" ]

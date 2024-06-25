@@ -1,0 +1,7 @@
+[requires]
+  libuv/1.48.0
+  uvw/3.4.0
+
+[generators]
+PkgConfigDeps
+

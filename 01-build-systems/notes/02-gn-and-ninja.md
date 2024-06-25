@@ -342,3 +342,4 @@ Stay tuned for Part III.
 - [Using GN build, Artisanl metabuild](https://docs.google.com/presentation/d/15Zwb53JcncHfEwHpnG_PoIbbzQ3GQi_cpujYwbpcbZo/edit#slide=id.g119d702868_0_12)
 - [GN Reference](https://gn.googlesource.com/gn/+/master/docs/reference.md#buildargs)
 - [Best practices for writing GN templates, Fuchsia](https://fuchsia.dev/fuchsia-src/development/build/build_system/best_practices_templates)
+- [Using dependencies from Conan](https://vcmi.eu/developers/Conan/)

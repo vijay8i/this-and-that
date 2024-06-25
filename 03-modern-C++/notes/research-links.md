@@ -1,11 +1,14 @@
 # Research
 - [Hacking CPP]((https://hackingcpp.com/cpp/educational_videos.html#cpp23))
 - [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
+- [CPPCon 2023](https://github.com/CppCon/CppCon2023)
 
 # Curious minds want to know
 ## Explicit template instantiation
 - https://stackoverflow.com/questions/60225945/explicit-c-template-instantiation-with-clang
 - https://stackoverflow.com/questions/2351148/explicit-template-instantiation-when-is-it-used
+
+## Lambdas
 
 ## Typedef vs using 
 - https://stackoverflow.com/questions/10747810/what-is-the-difference-between-typedef-and-using
@@ -31,3 +34,29 @@
 ## For Mac developers
 - https://guide.macports.org/
 - https://poweruser.blog/using-dtrace-with-sip-enabled-3826a352e64b
+
+### Port FUCs (Frequently used commands)
+1. Which package provides this artefact?
+    ```bash
+    port provides /opt/local/bin/pkg-config
+    port provides /opt/local/bin/clang++-mp-18 `which xz`
+    
+    ```
+2. Which packages does this package depend on?
+    ```bash
+    port deps pkgconfig
+    port deps clang-18 xz
+    ```
+3. What packages depend on this package?
+    ```bash
+    port dependents pkgconfig
+    port dependents clang-18 xz
+    # OR
+    port echo dependentof:pkgconfig
+    port echo dependentof:clang-18 dependentof:xz
+    ```
+4. What does this package provide?
+    ```bash
+    port contents pkgconfig
+    port contents clang-18 xz
+    ```

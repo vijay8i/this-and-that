@@ -1,0 +1,4 @@
+# Include the subdirectories that contain the actual targets.
+group("ad-hoc") {
+  deps = [ "//experiments/using-uvw:main" ]
+}

@@ -1,0 +1,70 @@
+# Copyright 2024 Million Views, LLC
+#
+# Retrieves pkg-config info for given packages, relative to a path
+# optionally.
+#
+# variables (required and optional inside the template invocation):
+#   "pkg_deps" (required) ->
+#       list of package names
+#   "pkg_deps_path" (optional) ->
+#     optional path to add to PKG_CONFIG_PATH to find the packages; e.g
+#     "third-party" will look for packages in the "third-party" relative
+#     to the current target folder; "//third-party" will look for packages
+#     in "third-party" relative to the project source root folder
+#
+#
+template("pkg_config") {
+  config(target_name) {
+    forward_variables_from(invoker, "*")
+    assert(defined(pkg_deps), "pkg_deps must be set")
+    if (defined(pkg_deps_path)) {
+      deps_base = rebase_path(pkg_deps_path, "")
+    } else {
+      deps_base = rebase_path(".", "//")
+    }
+
+    pkc_args = [
+      "-p",
+      deps_base,
+    ]
+    pkc_args += pkg_deps
+
+    eresult = exec_script("//build/common/pkg_config.py", pkc_args, "json")
+
+    if (eresult.cflags != []) {
+      if (!defined(cflags)) {
+        cflags = []
+      }
+      cflags += eresult.cflags
+    }
+
+    if (eresult.include_dirs != []) {
+      if (!defined(include_dirs)) {
+        include_dirs = []
+      }
+      include_dirs += rebase_path(eresult.include_dirs, "", "//")
+    }
+
+    if (eresult.libs != []) {
+      if (!defined(libs)) {
+        libs = []
+      }
+      libs += eresult.libs
+    }
+
+    if (eresult.lib_dirs != []) {
+      if (!defined(lib_dirs)) {
+        lib_dirs = []
+      }
+
+      lib_dirs += rebase_path(eresult.lib_dirs, "", "//")
+    }
+
+    if (eresult.ldflags != []) {
+      if (!defined(ldflags)) {
+        ldflags = []
+      }
+      ldflags += eresult.ldflags
+    }
+  }
+}

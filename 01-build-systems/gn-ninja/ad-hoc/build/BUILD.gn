@@ -1,0 +1,24 @@
+config("compiler_defaults") {
+  if (current_os == "linux") {
+    cflags = [
+      "-fPIC",
+      "-pthread",
+    ]
+  }
+}
+
+config("executable_ldconfig") {
+  if (!is_mac) {
+    ldflags = [
+      "-Wl,-rpath=\$ORIGIN/",
+      "-Wl,-rpath-link=",
+    ]
+  }
+}
+
+# bleeding-edge config to stay on the latest clang toolchain and C++
+config("bleeding-edge") {
+  cflags = [ "-std=c++23" ]
+  lib_dirs = [ "/opt/local/libexec/llvm-18/lib" ]
+  ldflags = [ "-Wl,-rpath,/opt/local/libexec/llvm-18/lib" ]
+}
