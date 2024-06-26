@@ -205,7 +205,7 @@ Local Cache
 ## Where am I?
 This section is a postscript of my journey for the last couple of days
 in trying to build my `ad-hoc` project. It was not as easy as it was
-with `meson`!. There were times when I almost was ready to eat my words
+with `meson`! There were times when I almost was ready to eat my words
 and get back to the trodden path of comfort that `cmake` provides; or 
 hear myself saying that I could salvage this quest by settling with 
 *meson*, and claim to have found something better than *cmake*. 
