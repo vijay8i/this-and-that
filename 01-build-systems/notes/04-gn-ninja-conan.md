@@ -123,7 +123,8 @@ deployer option.
 > doesn't generate `*.pc` files with the correct path information. It
 > works fine with the default `install` (which is to use the dependencies
 > from Conan's cache). You can find more details on the nature of the 
-> issue and its resolution [here][^3].
+> issue and its resolution [here](^3). For now I just hacked my local
+> installation to fix the *bug*.
 
 [^2]: https://docs.conan.io/2/examples/extensions/deployers/dev/development_deploy.html#examples-extensions-builtin-deployers-development
 [^3]: https://github.com/conan-io/conan/issues/16543
@@ -191,11 +192,11 @@ Local Cache
 
 ## Where am I?
 This section is a postscript of the journey for the last couple of days.
-It has been a way wilder experience than working with *meson*. There were
-times when I was almost was ready to eat my words and get back to the trodden
+It has been a way wilder experience than working with `meson`. There were
+times when I almost was ready to eat my words and get back to the trodden
 path of comfort that `cmake` provides; or hear myself saying that I could
-salvage this quest by settling with `meson`, and claim to have found
-something better than `cmake`. 
+salvage this quest by settling with *meson*, and claim to have found
+something better than *cmake*. 
 
 Most answers to the question, "Is there a better way," often have this 
 struggle built in. You have to climb the hill without knowing if you
