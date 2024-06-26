@@ -115,8 +115,7 @@ PkgConfigDeps
 
 And then let `conan` do its thing. You can read more about creating a
 deploy of dependencies for developer use [here](^2). Since I wanted to
-replicate what I did with `meson` I am going to proceed to use the 
-deployer option. 
+replicate what I did with `meson` I decided to use the deployer option. 
 
 > [!NOTE]
 > The `direct_deploy` and `full_deploy` option at the time of writing
