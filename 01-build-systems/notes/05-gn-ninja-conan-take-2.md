@@ -253,7 +253,7 @@ a way to represent this in the *gn*'s build graph. The group target serves
 as that representation. It exists to keep *gn* happy by respecting its 
 desire to build its build graph correctly &mdash; all **targets** that 
 appear in BUILD.gn files either directly or indirectly should be accounted
-for; any unused or unaccounted *targets* make *gn unhappy.
+for; any unused or unaccounted *targets* make *gn* unhappy.
 
 After sorting out that last bit, I have a setup that is better than what
 I got from *meson* &mdash; subjectively speaking. I barely managed to 
