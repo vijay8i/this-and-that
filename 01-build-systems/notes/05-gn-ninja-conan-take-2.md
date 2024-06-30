@@ -1,4 +1,4 @@
-# Is there such a thing as a perfect build system? (Part IV)
+# Is there such a thing as a perfect build system? (Part V)
 (thoughts in progress...)
 
 I have a feeling that we are on the home stretch after a long journey
@@ -7,11 +7,11 @@ I am willing to concede that `cmake` is the de facto king of the hill
 in this space &mdash; provided someone else has written all the necessary
 artefacts to build with it. However, in my case, since I am that poor
 soul who has to write those build scripts, and when given a choice I 
-would like to avoid working with gunky-looking syntax of *cmake*'s DSL,
+would like to avoid working with gunky-looking syntax of *cmake*'s DSL
 to setup my build infrastructure.
 
 To meet the objectives for my quest, I had to take a detour into learning
-`conan`, which formed the bulk of my journaling of this quest in part IV.
+`conan` which I documented in part IV.
 
 To be sure, *cmake* and *meson* deliver a lot out of the box; the price
 you pay, in my opinion, is to lose the freedom of flexibility in how
