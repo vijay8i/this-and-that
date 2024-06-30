@@ -103,7 +103,7 @@ fail (since the *action* never ran).
 > to me. And that is the notion of `gen-time` vs `build-time`, which in
 > hind sight is like doh! kind of realization. During `gen-time`, *gn*
 > generates the necessary build files, and during `build-time` *ninja* 
-> executes those `build files. So, *actions*s are for *ninja* and *templates*
+> executes those `build files`. So, *actions*s are for *ninja* and *templates*
 > are for *gn*. It get's confusing because a *template* can include an
 > *action*. One way to make sense is to see the *action* as an `async` 
 > function that is `awaited` for by `ninja`.
