@@ -262,7 +262,7 @@ wet with *gn* and *conan*, and didn't even look into *ninja*. I can see
 that once I get comfortable with *gn* templates and actions, I could whip
 up more elegant build setups.
 
-> [!WARN]
+> [!CAUTION]
 > Please do not use this setup for your work. There are dozens of nuances
 > left unaddressed, and it exists solely for the purpose of learning a 
 > a new way to design build systems.
