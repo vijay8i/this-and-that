@@ -125,9 +125,6 @@ replicate what I did with `meson` I decided to use the deployer option.
 > issue and its resolution [here](^3). For now I just hacked my local
 > installation to fix the *bug*(?).
 
-[^2]: https://docs.conan.io/2/examples/extensions/deployers/dev/development_deploy.html#examples-extensions-builtin-deployers-development
-[^3]: https://github.com/conan-io/conan/issues/16543
-
 ```bash
 # verify we have nothing installed to start with
 $ conan list '*'
@@ -179,8 +176,6 @@ third-party
 > of *designing* a build system using `gn`+`conan`+`ninja`. The details 
 > and motivation for this hack can be found [here](^4).
 
-[^4]: https://github.com/conan-io/conan/issues/16547
-
 You can remove unwanted dependencies, as is the case here since I have
 imported the dependencies into the project's source tree. In fact, let 
 me do just that to ensure that I have a `hermitically sealed` build.
@@ -218,7 +213,14 @@ way more pitfalls and detours on the journey so far than I had with
 
 Stay tuned.
 
+<!-- short links -->
+[^2]: https://docs.conan.io/2/examples/extensions/deployers/dev/development_deploy.html#examples-extensions-builtin-deployers-development
+[^3]: https://github.com/conan-io/conan/issues/16543
+[^4]: https://github.com/conan-io/conan/issues/16547
+[^5]: https://vcmi.eu/developers/Conan/
+
+
 # References
 - [Guide to pkg-config](https://people.freedesktop.org/~dbn/pkg-config-guide.html)
-- [GN template best practices](https://fuchsia.dev/fuchsia-src/development/build/build_system/best_practices_templates)
+- [Conan, software package manager for C and C++ developers](https://conan.io/)
 

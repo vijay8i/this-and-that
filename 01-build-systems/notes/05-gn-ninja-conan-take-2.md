@@ -1,21 +1,8 @@
 # Is there such a thing as a perfect build system? (Part V)
 (thoughts in progress...)
 
-I have a feeling that we are on the home stretch after a long journey
-of discovery into what it takes to get a decent build system in place.
-I am willing to concede that `cmake` is the de facto king of the hill
-in this space &mdash; provided someone else has written all the necessary
-artefacts to build with it. However, in my case, since I am that poor
-soul who has to write those build scripts, and when given a choice I 
-would like to avoid working with gunky-looking syntax of *cmake*'s DSL
-to setup my build infrastructure.
-
 To meet the objectives for my quest, I had to take a detour into learning
 `conan` which I documented in part IV.
-
-To be sure, *cmake* and *meson* deliver a lot out of the box; the price
-you pay, in my opinion, is to lose the freedom of flexibility in how
-the source code is laid out, which is important to me.
 
 > [!NOTE]
 > In the field of software construction, most problems can be solved by
@@ -77,6 +64,10 @@ executable("main") {
 }
 ```
 
+It took several iterations and plenty of RTFM minutes, and trawling 
+through *gn*'s newsgroup messages for answers, before I got something
+working. 
+
 Ignore for now and don't ask if this is the best way to build an executable,
 and instead focus on `conan_install` and `pkg_config` template function
 invocations. The key idea is that the developer/build-engineer can now
@@ -84,19 +75,27 @@ simply type `gn gen out/ad-hoc`, and `gn` will automagically use `conan`
 to fetch, download, build, and deploy `third-party` dependencies. This
 allows me to avoid having to use `git submodule` to manage my target's
 `third-party` dependencies, and it is one less step for the developer to
-remember to get started on a project. 
+remember to get started on a project.
 
-It took several iterations to get it to work after plenty of RTFM minutes,
-and trawling through *gn*'s newsgroup messages for answers. 
+> [!WARNING]
+> Do not blindly fetch dependencies from a central registry that is not
+> under your control as it introduces `supply-side-security` issues. In
+> production, I would most likely setup up my own registry which will 
+> contain curated collection of dependencies that are reviewed before
+> adoption and on an ongoing basis. On balance a `git submodule` approach
+> has the same set of issues if not managed for security.
 
-The first break through came from reading this thread about the difference
-between `action` and `exec_script`. I sort of could infer what roles `action` 
-and `template` function blocks take. The former is used by the build tool
-during the build whereas the latter is used by *gn* itself while generating
-the build setup phase. I was trying to install dependencies using *conan* 
-in a *action* block; since that action is not executed until build time, the
-subsequent step to retrieve `pkg-config` info from those dependencies would
-fail (since the *action* never ran).
+
+The reason I had trouble in getting a seemingly trival task accomplished
+using *gn* was because I did not understand `action` and `template` in
+depth. I sort of could infer what roles `action` and `template` function
+blocks take. The former is used by the build tool during the build whereas
+the latter is used by *gn* itself while generating the build setup phase.
+I was trying to install dependencies using *conan* in a *action* block; 
+since that action is not executed until build time, the subsequent step
+to retrieve `pkg-config` info from those dependencies would fail (since
+the *action* never ran). This became apparent after [reading this thread](^1)
+about the difference between `action` and `exec_script`.
 
 > [!TIP]
 > It might be obvious to those working with build systems but was not
@@ -109,13 +108,9 @@ fail (since the *action* never ran).
 > function that is `awaited` for by `ninja`.
 
 After a bit more of head banging, it became clear that the stuff I wanted
-to automate required template functions, not actions. With my limited 
-understanding of *gn* and the desire to wrap up this series, that's what
-I did. 
-
-Here are the two template functions that allow me to check off the second
-step. The python scripts are not important as they are trivial in what
-they do.
+to automate required template functions, not actions. I ended up with two
+template functions that allow me to check off the second step. The python
+scripts are not important as they are trivial in what they do.
 
 The first template(`//build/common/conan.gni`) provides the automation to
 fetch dependencies uisng *conan*. I see it as a *seed* from which the full
@@ -235,9 +230,19 @@ See //BUILD.gn:3:12: which caused the file to be included.
            ^-----------------------------
 ```
 
-The solution was to make the *conan* template function satisfy the build
-graph validation by *gn*. And it can be found in the following lines in
-`//build/common/conan.gni`:
+One of the key ideas of *gn* or any build metal tool for that matter is
+to ensure that the build files generated are correct and free of cycles.
+This is achieved by validating an internally constructed build graph from
+all the input files that are parsed to build a DAG of targets (and other
+stuff). Any unused target becomes questionable, and *gn* was complaining
+that my target 'install_third_party_packages' is unused. It is up to me
+now decide if I needed it and keep it or remove it otherwise. Obviously
+I need the function to execute but I don't care about using the target
+directly in my executable. How to go about fixing this situation was not
+obvious to me at all. Anyway, the solution to satisfy the build graph
+validation is to inform *gn* that 'install_third_party_packages' to be
+a `meta-target` like here in `//build/common/conan.gni`:
+
 ```lua
   group(target_name) {
     metadata = {
@@ -246,14 +251,16 @@ graph validation by *gn*. And it can be found in the following lines in
   }
 ```
 
-The `group()` *function* creates *gn* target; this target doesn't produce
-any build output itself, but it can be used as a dependency for other
+The `group()` *function* allows yout ocreate `meta-targets` that just 
+collect a set of dependencies into one named target. This target doesn't
+produce any build output itself, but it can be used as a dependency for other
 targets. Since the Conan installation happens during `gen-time`, we need
 a way to represent this in the *gn*'s build graph. The group target serves
 as that representation. It exists to keep *gn* happy by respecting its 
 desire to build its build graph correctly &mdash; all **targets** that 
 appear in BUILD.gn files either directly or indirectly should be accounted
-for; any unused or unaccounted *targets* make *gn* unhappy.
+for; any unused or unaccounted *targets* make *gn* unhappy, unless you
+inform it.
 
 After sorting out that last bit, I have a setup that is better than what
 I got from *meson* &mdash; subjectively speaking. I am happy with the
@@ -267,9 +274,20 @@ up more elegant build setups.
 > left unaddressed, and it exists solely for the purpose of learning a 
 > new way to design build systems.
 
-# Wrapping up
-TBD
+# Where am I?
+I think I am on the home stretch now. Coming up with a plan and accomplishing
+it feels good. But the job is not done. I want to have release and debug
+builds, and want to be convinced that I am not slowing down *ninja* because
+of build-time dependencies that should have been gen-time dependencies. 
+Finally, do an honest evaluation of the build setup and be able to arrive
+at some conclusions.
+
+Stay tuned.
+
+<!-- short links -->
+[^1]: https://groups.google.com/a/chromium.org/g/gn-dev/c/x4uy_Mhdb_Q/m/-G6r4X17AAAJ
 
 # References
+- [GN template best practices](https://fuchsia.dev/fuchsia-src/development/build/build_system/best_practices_templates)
 - [GN action vs exec_script](https://groups.google.com/a/chromium.org/g/gn-dev/c/x4uy_Mhdb_Q/m/-G6r4X17AAAJ)
 - [GN template, run newly-built executable by name](https://groups.google.com/a/chromium.org/g/gn-dev/c/3Cr_8Ej9C0g/m/nYD3aT4kBQAJ)
