@@ -253,14 +253,14 @@ in `//build/common/conan.gni`:
 
 The `group()` *function* allows you to create `meta-targets` that just 
 collect a set of dependencies into one named target. In my case, the 
-target doesn't produce any build output itself, but it required to 
+target doesn't produce any build output itself, but it is required to 
 execute in order for other dependencies to build. Since the Conan 
 installation happens during `gen-time`, we need a way to represent this
-in the *gn*'s build graph to keep *gn* happy by respecting its desire to
-build a graph that is correct &mdash; by ensuring all **targets** that 
-appear in  BUILD.gn files either directly or indirectly have been accounted
-for. Any unused or unaccounted *targets* make *gn* unhappy, unless you
-inform it, which I  did by using `group` function.
+in the *gn*'s build graph to keep it happy. It is happy if the DAG it
+constructs internally can `account` for all **targets** appearing in
+BUILD.gn files either directly or indirectly have a purpose. Any unused
+or unaccounted *targets* make *gn* unhappy, unless you tell it, which I
+did by using `group` function.
 
 After sorting out that last bit, I have a setup that is better than what
 I got from *meson* &mdash; subjectively speaking. I am happy with the
