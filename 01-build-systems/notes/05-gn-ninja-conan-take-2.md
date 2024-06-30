@@ -256,11 +256,11 @@ appear in BUILD.gn files either directly or indirectly should be accounted
 for; any unused or unaccounted *targets* make *gn* unhappy.
 
 After sorting out that last bit, I have a setup that is better than what
-I got from *meson* &mdash; subjectively speaking. I barely managed to 
-get my feet wet with *gn* and *conan*, and didn't even look into *ninja*.
-
-I am happy with the results so far. I can see that once I get comfortable
-with *gn* templates and actions, I could whip up more elegant build setups.
+I got from *meson* &mdash; subjectively speaking. I am happy with the
+results so far considering the fact that I barely managed to get my feet
+wet with *gn* and *conan*, and didn't even look into *ninja*. I can see
+that once I get comfortable with *gn* templates and actions, I could whip
+up more elegant build setups.
 
 > [!WARN]
 > Please do not use this setup for your work. There are dozens of nuances
