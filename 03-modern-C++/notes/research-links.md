@@ -2,6 +2,7 @@
 - [Hacking CPP]((https://hackingcpp.com/cpp/educational_videos.html#cpp23))
 - [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
 - [CPPCon 2023](https://github.com/CppCon/CppCon2023)
+- [Subspace (of safe C++)](https://orodu.net/)
 
 # Curious minds want to know
 ## Explicit template instantiation
@@ -60,3 +61,7 @@
     port contents pkgconfig
     port contents clang-18 xz
     ```
+
+
+## Version Control
+- [Git Submodule vs Subtree](https://adam-p.ca/blog/2022/02/git-submodule-subtree/#:~:text=TL%3BDR%3A%20Subtree%20is%20better,to%20edit%20and%20push%20it.)

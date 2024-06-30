@@ -1,0 +1,31 @@
+template("conan_install") {
+  forward_variables_from(invoker,
+                         [
+                           "conanfile",
+                           "deploy_dir",
+                           "deps",
+                         ])
+  assert(defined(conanfile), "conanfile must be set")
+  assert(defined(deploy_dir), "deploy_dir must be set")
+  print("source-absolute directory name", rebase_path(deploy_dir, "."))
+  print("source-absolute file name", rebase_path(conanfile, "."))
+
+  deploy_dir = rebase_path(deploy_dir, ".")
+  _args = [
+    "install",
+    rebase_path(conanfile, "."),
+    "--output-folder=${deploy_dir}",
+    "--deployer=direct_deploy",
+    "--deployer-folder=${deploy_dir}",
+    "--build=missing",
+  ]
+  exec_script("//build/common/conan.py", _args)
+
+  # this is needed to avoid the following error
+  # You set the variable "target_name" here and it was unused before it went out of scope.
+  group(target_name) {
+    metadata = {
+      conan_installed = [ true ]
+    }
+  }
+}

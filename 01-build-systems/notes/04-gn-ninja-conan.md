@@ -17,19 +17,18 @@ to kill them fast is to change the environment.
 And that is my excuse to look for a new tool to learn, with the hope
 that it avoids the kinks and warts of its alternatives.
 
-Today, I am going to document my experience of building the `ad-hoc`
-project using *gn* and *ninja*. The starting point is me having not a 
-clue on how to make *gn* fetch remote dependencies and build them. From
-constructing the `simple` project, I know how to use the dependencies
-once I know where they are located. I will admit that *meson* did a 
-fine job in getting me to the finish line; however, it required that I
-do it in two parts. If you recall, the first step was to operate within
-`3p` folder to deal with the dependencies, and then context switch to
-`experiments/using-uvw` folder. It would have been better if I could have
-done that as a single step from within my project root. It's possible
-with *meson* but that required the use of *subproject*, which I avoided
-making use of &mdash simply because I decided, for no good reason, to
-hold the folder structure of `experiments/using-uvw` as immutable.
+So, the objective is to build the `ad-hoc` project using *gn* and *ninja*.
+From constructing the `simple` project, I know how to use the dependencies
+once I know where they are located. But I have no clue how to make *gn*
+fetch remote dependencies and build them, which was effortless with
+*meson*. However, with *meson* there were two distinct steps to build
+the `ad-hoc` project. If you recall, the first step was to operate within
+`3p` folder to fetch and build the dependencies, and then context switch
+to `experiments/using-uvw` folder. It would be better to do that in one
+step from within the project root. I think it is possible with *meson*,
+but my understanding is that it requires the use of *subproject*, which
+I avoided using &mdash; simply because I decided, for no good reason,
+to hold the folder structure of `experiments/using-uvw` as immutable.
 
 A quick recap of the properties that I am looking for in my build system.
 - [ ] the tool(s) can be used for a wide range of projects.
@@ -37,6 +36,7 @@ A quick recap of the properties that I am looking for in my build system.
 - [ ] seperation of concerns.
 - [ ] fast, free, extensible, and open source.
 - [ ] syntax should not be headache-inducing.
+- [ ] most importantly the tool should not dictate how to layout my code
 
 So far, *gn* and *ninja* check off these boxes. But we still need to
 figure out how to fetch third-party dependencies. There are other tools 

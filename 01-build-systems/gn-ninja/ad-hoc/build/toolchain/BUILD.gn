@@ -4,16 +4,14 @@ toolchain("clang") {
     command = "/opt/local/bin/clang -MMD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_c}} -c {{source}} -o {{output}}"
     depsformat = "gcc"
     description = "CC {{output}}"
-    outputs =
-        [ "{{source_out_dir}}/{{target_output_name}}.{{source_name_part}}.o" ]
+    outputs = [ "{{source_out_dir}}/{{source_name_part}}.o" ]
   }
   tool("cxx") {
     depfile = "{{output}}.d"
     command = "/opt/local/bin/clang++ -MMD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}} -c {{source}} -o {{output}}"
     depsformat = "gcc"
     description = "CXX {{output}}"
-    outputs =
-        [ "{{source_out_dir}}/{{target_output_name}}.{{source_name_part}}.o" ]
+    outputs = [ "{{source_out_dir}}/{{source_name_part}}.o" ]
   }
   tool("alink") {
     command = "ar rcs {{output}} {{inputs}}"

@@ -2,4 +2,7 @@
 # set startup options.
 
 buildconfig = "//build/BUILDCONFIG.gn"
-exec_script_whitelist = [ "build/common/pkg_config.gni" ]
+exec_script_whitelist = [
+  "build/common/conan.gni",
+  "build/common/pkg_config.gni",
+]

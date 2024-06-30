@@ -1,9 +1,14 @@
+import("//build/common/conan.gni")
 import("//build/common/pkg_config.gni")
 
-pkg_config("target_defaults") {
-  pkg_deps_path = "//third-party"  # project root absolute
+conan_install("install_third_party_packages") {
+  conanfile = "//conanfile.txt"
+  deploy_dir = "//third-party"
+}
 
-  # pkg_deps_path = "third-party" # relative to this folder
+pkg_config("target_defaults") {
+  # project root releative path to find *.pc files of the dependencies
+  pkg_deps_path = "//third-party"  # project root absolute
 
   # order matters (if the packages have dependencies)
   pkg_deps = [

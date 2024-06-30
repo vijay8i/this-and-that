@@ -23,48 +23,48 @@ template("pkg_config") {
       deps_base = rebase_path(".", "//")
     }
 
-    pkc_args = [
+    _args = [
       "-p",
       deps_base,
     ]
-    pkc_args += pkg_deps
+    _args += pkg_deps
 
-    eresult = exec_script("//build/common/pkg_config.py", pkc_args, "json")
+    _result = exec_script("//build/common/pkg_config.py", _args, "json")
 
-    if (eresult.cflags != []) {
+    if (_result.cflags != []) {
       if (!defined(cflags)) {
         cflags = []
       }
-      cflags += eresult.cflags
+      cflags += _result.cflags
     }
 
-    if (eresult.include_dirs != []) {
+    if (_result.include_dirs != []) {
       if (!defined(include_dirs)) {
         include_dirs = []
       }
-      include_dirs += rebase_path(eresult.include_dirs, "", "//")
+      include_dirs += rebase_path(_result.include_dirs, ".")
     }
 
-    if (eresult.libs != []) {
+    if (_result.libs != []) {
       if (!defined(libs)) {
         libs = []
       }
-      libs += eresult.libs
+      libs += _result.libs
     }
 
-    if (eresult.lib_dirs != []) {
+    if (_result.lib_dirs != []) {
       if (!defined(lib_dirs)) {
         lib_dirs = []
       }
 
-      lib_dirs += rebase_path(eresult.lib_dirs, "", "//")
+      lib_dirs += rebase_path(_result.lib_dirs, ".")
     }
 
-    if (eresult.ldflags != []) {
+    if (_result.ldflags != []) {
       if (!defined(ldflags)) {
         ldflags = []
       }
-      ldflags += eresult.ldflags
+      ldflags += _result.ldflags
     }
   }
 }

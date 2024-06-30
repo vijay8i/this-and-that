@@ -11,18 +11,25 @@ import errno
 """Collection of utility functions used by the build system"""
 
 
-def get_shell_output(cmd, args=[]):
-    # print(f"cmd -> {cmd, args}")
-    """Run |cmd + args| and return output as a list.
+def run(cmd, args=[], check=False):
+    """Run |cmd + args| and return the result.
 
     Note: cmd is a list (not string); the interface allows you to
     pass the args as part of the cmd itself or split command to
     be the name of the command to be executed and pass the args in 
     the 'args' parameter.
     """
-    result = subprocess.run(
-        cmd + args, encoding="utf-8", stdout=subprocess.PIPE, check=False
+    return subprocess.run(
+        cmd + args, encoding="utf-8", stdout=subprocess.PIPE, check=check
     )
+
+
+def get_shell_output(cmd, args=[]):
+    # print(f"cmd -> {cmd, args}")
+    """Run |cmd + args| and return output as a list.
+    """
+    result = run(cmd, args)
+
     if result.returncode:
         sys.exit(result.returncode)
     return shlex.split(result.stdout)
