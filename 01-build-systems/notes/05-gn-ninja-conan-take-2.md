@@ -265,7 +265,7 @@ up more elegant build setups.
 > [!CAUTION]
 > Please do not use this setup for your work. There are dozens of nuances
 > left unaddressed, and it exists solely for the purpose of learning a 
-> a new way to design build systems.
+> new way to design build systems.
 
 # Wrapping up
 TBD
