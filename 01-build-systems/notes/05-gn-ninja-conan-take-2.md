@@ -239,9 +239,9 @@ that my target 'install_third_party_packages' is unused. It is up to me
 now decide if I needed it and keep it or remove it otherwise. Obviously
 I need the function to execute but I don't care about using the target
 directly in my executable. How to go about fixing this situation was not
-obvious to me at all. Anyway, the solution to satisfy the build graph
-validation is to inform *gn* that 'install_third_party_packages' to be
-a `meta-target` like here in `//build/common/conan.gni`:
+obvious to me at all. The solution, it turns out, is to satisfy *gn* by 
+stating that 'install_third_party_packages' is a `meta-target` like here
+in `//build/common/conan.gni`:
 
 ```lua
   group(target_name) {
@@ -251,16 +251,16 @@ a `meta-target` like here in `//build/common/conan.gni`:
   }
 ```
 
-The `group()` *function* allows yout ocreate `meta-targets` that just 
-collect a set of dependencies into one named target. This target doesn't
-produce any build output itself, but it can be used as a dependency for other
-targets. Since the Conan installation happens during `gen-time`, we need
-a way to represent this in the *gn*'s build graph. The group target serves
-as that representation. It exists to keep *gn* happy by respecting its 
-desire to build its build graph correctly &mdash; all **targets** that 
-appear in BUILD.gn files either directly or indirectly should be accounted
-for; any unused or unaccounted *targets* make *gn* unhappy, unless you
-inform it.
+The `group()` *function* allows you to create `meta-targets` that just 
+collect a set of dependencies into one named target. In my case, the 
+target doesn't produce any build output itself, but it required to 
+execute in order for other dependencies to build. Since the Conan 
+installation happens during `gen-time`, we need a way to represent this
+in the *gn*'s build graph to keep *gn* happy by respecting its desire to
+build a graph that is correct &mdash; by ensuring all **targets** that 
+appear in  BUILD.gn files either directly or indirectly have been accounted
+for. Any unused or unaccounted *targets* make *gn* unhappy, unless you
+inform it, which I  did by using `group` function.
 
 After sorting out that last bit, I have a setup that is better than what
 I got from *meson* &mdash; subjectively speaking. I am happy with the
