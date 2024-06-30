@@ -90,11 +90,11 @@ The reason I had trouble in getting a seemingly trival task accomplished
 using *gn* was because I did not understand `action` and `template` in
 depth. I sort of could infer what roles `action` and `template` function
 blocks take. The former is used by the build tool during the build whereas
-the latter is used by *gn* itself while generating the build setup phase.
-I was trying to install dependencies using *conan* in a *action* block; 
-since that action is not executed until build time, the subsequent step
-to retrieve `pkg-config` info from those dependencies would fail (since
-the *action* never ran). This became apparent after [reading this thread](^1)
+the latter is used by *gn* itself while generating the build files for
+*ninja*. I was trying to install dependencies using *conan* in a *action*
+block; since that action is not executed until build time, the subsequent
+step to retrieve `pkg-config` info from those dependencies would fail
+(since the *action* never ran). This became apparent after [reading this thread](^1)
 about the difference between `action` and `exec_script`.
 
 > [!TIP]
