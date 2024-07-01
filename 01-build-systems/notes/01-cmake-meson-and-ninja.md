@@ -36,13 +36,14 @@ and whole bunch of others in this space.
 
 Ninja was designed with constraints of what it can do, what it wants to
 do and what it does to a very narrow scope which is to compile a large
-code base fast by chomping through an assembly file (`build.ninja`) 
-in parallel.
+code base fast by chomping through one or more assembly file(s).
 
-While such an assembly file can be written by hand, Ninja leaves the DX
-to other tools such as CMake and Meson. In other words you need loops
-and conditionals to create the assembly of instructions for *ninja* to
-chomp at to produce the artefacts (executables, libraries, docs, ...) 
+While such assembly file(s) can be written by hand, it can get tricky
+and feels like grunt work very quickly. Ninja leaves the DX of creating
+such files to other tools such as CMake and Meson, which provide constructs
+such as loops and conditionals to create the assembly of instructions 
+for *ninja* to chomp at to produce the artefacts (executables, libraries,
+docs, ...) 
 
 For step 1, the most popular choice is *cmake*. But `CMakeLists.txt`
 syntax is simply not for me; it gives me allergies. I get it that it is
@@ -53,14 +54,14 @@ provide a well designed build-systems specific library to achieve the
 same result. Or at the very least use syntax that doesn't require a
 cognitive context switch.
 
-Internet told me that *meson* is the next closest thing that fits my
-taste; its syntax is pythonic and often seen in use with *ninja* in 
-many foss projects.
+So, I am looking for an alternative to `cmake` and Internet tells me that
+I have two options: *gn*, and *meson*. Meson is the closest thing that
+fits my preference for syntax; its pythonic and often seen in use with
+*ninja* in  many foss projects.
 
-So I decided to investigate this duo in preparation for an upcoming
-open source project that I have in mind. The rest of this article goes
-into the details of getting a simple program in C++ built with a couple
-of 3rd party library dependencies. It gets technical beyond this point.
+This article goes into the details of getting a simple program in C++
+built with a couple of 3rd party library dependencies, and write down
+my experience. It gets technical beyond this point.
 
 ## Using `meson` and `ninja`
 Consider the project tree structure below. It is adhoc and I started 
@@ -83,17 +84,10 @@ with it wanting to learn about `uvw` on a whim.
 │       
 ```
 
-I git cloned *uvw* into `3p` folder.
-> What I really need is a fetch tool that obtains the source from 
-> a git url and copies it to a destination folder of my choice, and
-> keep the source in sync with remote (for a specified release tag
-> or hash). That quickly crosses into a different dimension, which 
-> I will not get into for this exercise.
-
-Notice that *uvw* supports building using either *cmake* or *meson*. 
-Since I did not have *meson* installed (initially), I used *cmake* to
-succesfully build and run tests by simply following the instructions
-in README.md of *uvw*.
+I git cloned *uvw* into `3p` folder. And I noticed that *uvw* supports
+building using either *cmake* or *meson*. Since I did not have *meson*
+installed (initially), I used *cmake* to succesfully build and run tests
+by simply following the instructions in README.md of *uvw*.
 
 Next I wanted to use the header files from *uvw* and link to the library
 that was built in the first step. Turns out this simple desire of mine
@@ -121,10 +115,31 @@ meson setup --reconfigure -Dprefix=$PROJECT_ROOT/3p/local build
 ninja -C build install
 ```
 
-That got me `libuv` and `libuvw` compiled and installed locally. Note
-that *libuvw* headers are in source; only the compiled `dll` gets
-installed. So now the next challenge is to make my example use them. As
-a reminder it is a challenge only because my directory structure goes
+In case it is not obvious, let me point out that *meson* managed to
+pull in the required dependency `libuv` of `uvw` by itself because
+the author of `uvw` declares it as a dependency in *meson.build* 
+like so:
+
+```python
+libuv_dep = dependency('libuv', version: '1.48.0', required: true)
+```
+
+That is really cool. 
+
+> [!NOTE]
+> In an ideal world,  I prefer a fetch tool that obtains the source
+> from a git url and copies it to a destination folder of my choice,
+> and keep the source in sync with remote (for a specified release tag
+> or hash). This would only work if everyone agreed on a universal 
+> `meta build tool`. A topic that quickly crosses into a different
+>  dimension, which I will not get into for this exercise. Yes, I know 
+> *cmake* can do this... but it doesn't have my vote to be the universal
+> *meta build tool* for various reasons, including the syntax.
+
+After the above step, I got `libuv` and `libuvw` compiled and installed
+locally. Note that *libuvw* headers are in source; only the compiled `dll`
+gets installed. So now the next challenge is to make my example use them.
+As a reminder it is a challenge only because my directory structure goes
 *against the grain* of what is recommended or expected.
 
 After a bit more of *RTFM* minutes, I figured out that I need to
@@ -170,7 +185,7 @@ executable(
 )
 ```
 
-With that in place, now I got meson and ninja to do their thing:
+With that in place, I got meson and ninja to do their thing:
 
 ```sh
 # export PROJECT_ROOT=$HOME/path/to/project/root
@@ -348,8 +363,10 @@ variables for `executable` or `project`? And many more questions arose
 as I tried to get things to work. 
 
 I hear you; it's open source. So use it, or don't, or fix it; just don't
-complain. Fair. At this point, I will have to explore `gn` before I can
-arrive at a conclusion on which way to go.
+complain. Fair. At this point, I still have the option to explore `gn` 
+before I can arrive at a conclusion on which way to go.
+
+To be continued...
 
 ## References:
 - [Ninja build tool](https://lwn.net/Articles/706404/)

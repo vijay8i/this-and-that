@@ -3,9 +3,9 @@
 
 In Part III, I concluded that learning *gn* is a better investment of 
 time than *meson*. Learning is not free and mastering anything takes
-time. To be clear, if you are comfortable with *cmake* and its ecosystem,
-then good for you &mdash; perfection is in the eye of the beholder &mdash;
-keep using it.
+time. To be clear, if you are comfortable with *cmake* or *meson* then
+good for you, keep using it &mdash; after all, perfection is in the eye
+of the beholder.
 
 My search for a better meta build tool started only because it's been
 a while (a lot while) since I messed around with *cmake*; in that time,
@@ -21,10 +21,12 @@ So, the objective is to build the `ad-hoc` project using *gn* and *ninja*.
 From constructing the `simple` project, I know how to use the dependencies
 once I know where they are located. But I have no clue how to make *gn*
 fetch remote dependencies and build them, which was effortless with
-*meson*. However, with *meson* there were two distinct steps to build
-the `ad-hoc` project. If you recall, the first step was to operate within
-`3p` folder to fetch and build the dependencies, and then context switch
-to `experiments/using-uvw` folder. It would be better to do that in one
+*meson*. 
+
+However, with *meson* there were two distinct steps to build the `ad-hoc`
+project. If you recall, the first step was to operate within `3p` folder
+to fetch and build the dependencies, and then context switch to 
+`experiments/using-uvw` folder. It would be better to do that in one
 step from within the project root. I think it is possible with *meson*,
 but my understanding is that it requires the use of *subproject*, which
 I avoided using &mdash; simply because I decided, for no good reason,
@@ -41,12 +43,11 @@ A quick recap of the properties that I am looking for in my build system.
 So far, *gn* and *ninja* check off these boxes. But we still need to
 figure out how to fetch third-party dependencies. There are other tools 
 under `depot_tools` from Google for fetching and syncing source code,
-which seem to be more tightly coupled to the needs of Google's own 
-projects. 
+which seem to be tightly coupled to the needs of Google's own projects. 
 
 Therefore, I decided to go with `conan` for fetching third-party
 dependencies. I have no idea how that is going to turn out. But we
-have to start somewhere, so here is the plan:
+have to start somewhere, and so here is the plan:
 - Figure out how to fetch third-party dependencies (`uv` and `uvw`).
 - Integrate the previous step using *gn* `actions`.
 - Finally use the `third-party` dependencies.
@@ -211,7 +212,7 @@ continue to climb the `gn` + `ninja` + `conan` hill; yes, there were
 way more pitfalls and detours on the journey so far than I had with 
 *meson*; but my intuition says this hill is worth climbing.
 
-Stay tuned.
+To be continued...
 
 <!-- short links -->
 [^2]: https://docs.conan.io/2/examples/extensions/deployers/dev/development_deploy.html#examples-extensions-builtin-deployers-development

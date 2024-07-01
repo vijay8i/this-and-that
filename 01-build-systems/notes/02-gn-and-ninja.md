@@ -27,8 +27,8 @@ all developers of diverse experience levels.
 > slow reader).
 
 I left Part I concluding that `meson` is not for me; and that I have
-to explore `gn` + `ninja` combo someday in my quest to find the perfect
-build system. And that someday is today.
+to explore `gn` + `ninja` combo in my quest to find the perfect build 
+system. That is the topic for today.
 
 ## Learning from experience
 Getting things working with *meson* for an ad-hoc project structure
@@ -63,7 +63,8 @@ simple
         └── simple-stats.hh
 ```
 
-I started with the [quick start document](^1) and worked my way through.
+I started with the [quick start document](^1) and worked my way through
+to create the `simple` structure.
 
 The general concepts in *gn* are similar to *cmake* and *meson* &mdash; 
 create a directory structure that breaks the system into subsystems, 
@@ -75,6 +76,7 @@ create one or more `group` of features and declare the dependencies for
 each. Btw, the `group` name becomes a target that can be used to direct
 `ninja` what to build.
 
+> [!TIP]
 > Remember to design your build like code.
 > &mdash; Brett Wilson
 
@@ -82,8 +84,6 @@ The first thing I took note of and appreciated is that *gn* automatically
 looks for and picks up the values in `.gn` file unlike *meson*'s 
 `--native-file` option. In fact it provides a help message that is 
 somehow reassuring (to me).
-
-[^1]: https://gn.googlesource.com/gn/+/main/docs/quick_start.md
 
 ```bash
 $ gn gen out
@@ -127,6 +127,8 @@ executable("app-shared") {
   include_dirs = [ "../lib" ]
 }
 ```
+
+> [!TIP]
 > PS: found a neat trick to highlight *gn* syntax by setting the fence
 > block's language to be `lua`. :shushing_face:
 
@@ -331,12 +333,16 @@ Median: 3.00
 ```
 
 Nice. With this initial experience I think I am ready to go the distance
-with *gn* and take on the `ad-hoc` project which has a few challenges
+with *gn* and take on the `ad-hoc` project. Recall that I did not follow
+the suggested guidelines of *meson* to use *subprojects* to set it up
+and that created some rant from me. In addition it has a few challenges
 like fetching third party dependency (`uvw`) that in turn depends on
-`uv`. And to make it interesting, I did not follow the suggested 
-guidelines of *meson* to use *subprojects*.
+`uv`, which *meson* handled admirably.
 
-Stay tuned for Part III.
+To be continued...
+
+<!-- short links -->
+[^1]: https://gn.googlesource.com/gn/+/main/docs/quick_start.md
 
 # References
 - [Using GN build, Artisanl metabuild](https://docs.google.com/presentation/d/15Zwb53JcncHfEwHpnG_PoIbbzQ3GQi_cpujYwbpcbZo/edit#slide=id.g119d702868_0_12)

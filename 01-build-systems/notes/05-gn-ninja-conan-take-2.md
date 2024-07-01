@@ -280,9 +280,9 @@ it feels good. But the job is not done. I want to have release and debug
 builds, and want to be convinced that I am not slowing down *ninja* because
 of build-time dependencies that should have been gen-time dependencies. 
 Finally, do an honest evaluation of the build setup and be able to arrive
-at some conclusions.
+at some conclusions at the end of a journey.
 
-Stay tuned.
+To be continued...
 
 <!-- short links -->
 [^1]: https://groups.google.com/a/chromium.org/g/gn-dev/c/x4uy_Mhdb_Q/m/-G6r4X17AAAJ

@@ -1,8 +1,8 @@
 # Is there such a thing as a perfect build system? (Part III)
 (thoughts in progress...)
 
-In Part II, I left my quest to find a perfect build system (that meets my
-requirements and preferences) wanting to move forward building the 
+In Part II, I left my quest to find a perfect build system, that meets my
+requirements and preferences, wanting to move forward to build the 
 `ad-hoc` project with *gn* to compare with the experience of building
 the same using *meson*.
 
@@ -141,6 +141,8 @@ are subjective or objective.
 
 Now, I still have not built the `ad-hoc` project (yet) using *gn* which
 I think will be the litmus test for me to make the final call.
+
+To be continued...
 
 <!-- live references -->
 [^1]: https://mesonbuild.com/Tutorial.html
