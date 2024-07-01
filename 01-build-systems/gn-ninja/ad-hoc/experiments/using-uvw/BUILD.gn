@@ -1,7 +1,8 @@
 import("//build/common/conan.gni")
 import("//build/common/pkg_config.gni")
 
-conan_install("install_third_party_packages") {
+# install third-party packages needed by main
+conan_install("3pp_for_main") {
   conanfile = "//conanfile.txt"
   deploy_dir = "//third-party"
 }

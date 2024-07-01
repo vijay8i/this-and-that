@@ -4,27 +4,36 @@
 > Be sure to read the [epilog](#epilog); I found out I did not
 > RTFM enough on the Meson docs and issues. Still my rant has some merit
 
-An elegant build framework that I have used in the past is `waf.io` and
-it worked well for my use cases. I wrote my build tasks in `Python` using
-as all the features of the language as needed. I had to  stick to a few 
-conventions (required by *waf.io*) and ended up with code that builds 
-code that in my opinion is readable and maintainable for any one coming
-in contact with it many moons later. 
+An elegant build framework that I have used in the past is [`waf.io`](^1)
+and it worked well for our use cases. We wrote build tasks in `Python` using
+features of the language as needed, while sticking to a few conventions 
+required by *waf.io*, and ended up with code that builds code that in my
+opinion was readable and maintainable for any one coming in contact with
+it many moons later. 
 
-It has one design quirk though; it requires a version of the program 
-script it into source control post installation. Ironically, this feature
-is what made me choose it in the first place for a complex build
-pipeline in my last startup. Developer's could simply checkout the 
-project and build without having to install any additional tools other
-than the standard compiler tool chain.
+Before I go any further, let me confess: the title is a clickbait. There
+is no such thing as a perfect build system, but that should not stop us
+from looking for one. And just when we think we found one, we begin to
+discover the the warts, quirks, and kinks. 
 
-However, for modern software development and distribution, especially
-in the world of open source where developers are trying to mix and match
-various components/libraries of their choice, I think this quirk introduces
-complexity in unknown ways. But if your software is completely built
-within the organization and only the executables are distributed, then
-*waf.io* is a good choice if you value flexibility and maintainability
-over raw build performance.
+For instance *waf.io* has this design quirk of having to commit itself
+into version control post install. Ironically, this feature is what made
+me choose it for a complex build pipeline in my last startup. Developers
+could simply checkout the monorepo and start building without having to
+install any additional tools other than the standard compiler tool chain.
+
+Reality of modern software development however is that we have to deal
+with dozens of dependencies that come with their own build systems, and
+*waf* to my knowledge doesn't handle integration with those dependencies
+well &mdash; if I recall correctly, you end up writing a bunch of Python
+code to work with third-party dependencies, which if written poorly can
+slow you down with long build times.
+
+> [!NOTE]
+> It's possible that *waf* may have addressed the kind of issues I had
+> using it almost a decade ago. Even otherwise, I think *waf* is a fine
+> tool that gets you going for small to medium projects and a worthwhile
+> alternative to have in your toolbox.
 
 If performance is the main concern then a two step build pipeline is
 arguably the way to go. The first step generates a build file and the
@@ -367,8 +376,11 @@ complain. Fair. At this point, I still have the option to explore `gn`
 before I can arrive at a conclusion on which way to go.
 
 To be continued...
+<!-- short links -->
+[^1]: https://waf.io/
 
 ## References:
+- [WAF - The build system](https://waf.io/)
 - [Ninja build tool](https://lwn.net/Articles/706404/)
 - [Node Addon using Ninja](https://stackoverflow.com/questions/58633310/how-to-compile-node-js-native-api-extension-via-meson-build-system)
 - [Define dependency not found using `pkg-config`](https://stackoverflow.com/questions/47010355/mesonbuild-how-to-define-dependency-to-a-library-that-cannot-be-found-by-pkg-c)
