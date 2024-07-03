@@ -11,16 +11,17 @@ required by *waf.io*, and ended up with code that builds code that in my
 opinion was readable and maintainable for any one coming in contact with
 it many moons later. 
 
-Before I go any further, let me confess: the title is a clickbait. There
-is no such thing as a perfect build system, but that should not stop us
-from looking for one. And just when we think we found one, we begin to
-discover the the warts, quirks, and kinks. 
-
-For instance *waf.io* has this design quirk of having to commit itself
-into version control post install. Ironically, this feature is what made
-me choose it for a complex build pipeline in my last startup. Developers
+However, *waf.io* has this design quirk of having to commit itself into
+version control post install. Ironically, this feature is what made me
+choose it for a complex build pipeline in my last startup. Developers
 could simply checkout the monorepo and start building without having to
 install any additional tools other than the standard compiler tool chain.
+
+
+Before I go any further, let me confess: the title is a clickbait. There
+is no such thing as a perfect build system. I have not found one yet that
+is free from warts, quirks, and kinks; so far. But that should not
+stop us from looking for it.
 
 Reality of modern software development however is that we have to deal
 with dozens of dependencies that come with their own build systems, and
