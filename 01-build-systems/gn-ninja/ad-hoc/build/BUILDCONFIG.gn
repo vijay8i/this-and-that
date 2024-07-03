@@ -1,3 +1,9 @@
+# Declare build_type argument and default to "debug"
+declare_args() {
+  # Set the default build type to "debug"
+  build_type = "debug"
+}
+
 # All binary targets will get this list of configs by default.
 # Targets can out out of a config by removing from their local
 # configs list.
@@ -5,6 +11,13 @@ shared_binary_target_configs = [
   "//build:compiler_defaults",
   "//build:bleeding-edge",
 ]
+
+# Apply build type specific config
+if (build_type == "debug") {
+  shared_binary_target_configs += [ "//build:debug_config" ]
+} else if (build_type == "release") {
+  shared_binary_target_configs += [ "//build:release_config" ]
+}
 
 # Apply that default list to the binary target types.
 set_defaults("executable") {

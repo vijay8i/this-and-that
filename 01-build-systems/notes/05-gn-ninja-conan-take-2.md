@@ -1,8 +1,10 @@
 # Is there such a thing as a perfect build system? (Part V)
 (thoughts in progress...)
 
-To meet the objectives for my quest, I had to take a detour into learning
-`conan` which I documented in part IV.
+In part IV, I had to take a detour to learn about `conan`, in order to
+meet my preferential objective of picking tools that do one thing and
+do it well; and to build the `ad-hoc` project with minimal steps (for
+the developer or release engineer)
 
 > [!NOTE]
 > In the field of software construction, most problems can be solved by

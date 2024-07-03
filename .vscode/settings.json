@@ -1,3 +1,11 @@
 {
-  "mesonbuild.configureOnOpen": false
+  "mesonbuild.configureOnOpen": false,
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "database": "/Users/vijay/workspaces/ws-million-views/packages/storage/packages/stl/example/users.db",
+      "name": "users"
+    }
+  ]
 }

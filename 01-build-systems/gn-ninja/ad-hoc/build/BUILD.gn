@@ -22,3 +22,18 @@ config("bleeding-edge") {
   lib_dirs = [ "/opt/local/libexec/llvm-18/lib" ]
   ldflags = [ "-Wl,-rpath,/opt/local/libexec/llvm-18/lib" ]
 }
+
+config("debug_config") {
+  cflags = [
+    "-g",
+    "-O0",
+    "-DDEBUG",
+  ]
+}
+
+config("release_config") {
+  cflags = [
+    "-O3",
+    "-DNDEBUG",
+  ]
+}
