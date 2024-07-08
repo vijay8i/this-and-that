@@ -204,7 +204,7 @@ that is doable using *gn*, but for now I think this is good enough.
 ## Wrap up
 You won't find a list of pros and cons in this section for I did not
 set out to write that kind of article; heck, I didn't even think I was
-writing an article. That is not to say, there aren't pros and cons when
+writing an article. That is not to say there aren't pros and cons when
 choosing a build system. There will always be pros and cons to anything
 we touch and use. However, I do have a few thoughts on the nature and 
 purpose of my quest.
@@ -233,6 +233,7 @@ the *status quo*, I think the combination of `gn` + `conan` + `ninja` is
 worth considering. I enjoyed the process, both the discovery and making
 use of this trio. 
 
-The fake rebels can settle for *meson*. To each their own. Peace.
+I am not sure where to place *meson* on this spectrum. In the end, it
+is to each their own.
 
 /fin.
