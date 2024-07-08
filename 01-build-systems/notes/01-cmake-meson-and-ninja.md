@@ -1,22 +1,17 @@
 # Is there such a thing as a perfect build system? (Part I)
 (thoughts in progress...)
 
-> Be sure to read the [epilog](#epilog); I found out I did not
-> RTFM enough on the Meson docs and issues. Still my rant has some merit
-
 An elegant build framework that I have used in the past is [`waf.io`](^1)
-and it worked well for our use cases. We wrote build tasks in `Python` using
-features of the language as needed, while sticking to a few conventions 
-required by *waf.io*, and ended up with code that builds code that in my
-opinion was readable and maintainable for any one coming in contact with
-it many moons later. 
+and it worked well for our use cases. We wrote build tasks using `Python`
+by implementing steps required by *waf.io*, and ended up with code that
+builds code that in my opinion was readable and maintainable for any one
+coming in contact with it many moons later. 
 
 However, *waf.io* has this design quirk of having to commit itself into
 version control post install. Ironically, this feature is what made me
 choose it for a complex build pipeline in my last startup. Developers
 could simply checkout the monorepo and start building without having to
 install any additional tools other than the standard compiler tool chain.
-
 
 Before I go any further, let me confess: the title is a clickbait. There
 is no such thing as a perfect build system. I have not found one yet that
@@ -66,8 +61,8 @@ cognitive context switch.
 
 So, I am looking for an alternative to `cmake` and Internet tells me that
 I have two options: *gn*, and *meson*. Meson is the closest thing that
-fits my preference for syntax; its pythonic and often seen in use with
-*ninja* in  many foss projects.
+fits my preference for syntax; it is pythonic and often seen in use with
+*ninja* in many foss projects.
 
 This article goes into the details of getting a simple program in C++
 built with a couple of 3rd party library dependencies, and write down
@@ -101,9 +96,9 @@ by simply following the instructions in README.md of *uvw*.
 
 Next I wanted to use the header files from *uvw* and link to the library
 that was built in the first step. Turns out this simple desire of mine
-is not trivial to fulfill with either *cmake* or *meson*. Both tools 
+is non-intuitive to fulfill with either *cmake* or *meson*. Both tools 
 quickly start *suggesting* how to setup the project structure the way
-*they* want rather than how I want.
+*they* want rather than how *I* want.
 
 I had two alternatives: resort to using a Makefile or learn more on how
 to make it work with either *cmake* or *meson*. Make is wild; and I have
@@ -126,9 +121,8 @@ ninja -C build install
 ```
 
 In case it is not obvious, let me point out that *meson* managed to
-pull in the required dependency `libuv` of `uvw` by itself because
-the author of `uvw` declares it as a dependency in *meson.build* 
-like so:
+pull in the required dependency `libuv` of `uvw` because the author of
+`uvw` declares it as a dependency in *meson.build* like so:
 
 ```python
 libuv_dep = dependency('libuv', version: '1.48.0', required: true)
@@ -239,8 +233,10 @@ env.set('CC', '/opt/local/bin/clang++')
 env.set('CC_FOR_BUILD', '/opt/local/bin/clang++')
 ```
 
-Disappointingly that did not work because `executable()` doesn't 
-pick up the environment nor does it accept it as an argument.
+I should have know that was a dead end `executable()` doesn't does not
+accept it as an argument. Remember that I am just trying to see how far
+I can go with my conceptual knowledge without having to learn *meson*
+in depth. 
 
 ```shell
 C++ compiler for the host machine: c++ (clang 15.0.0 "Apple clang version 15.0.0 (clang-1500.1.0.2.5)")
@@ -255,15 +251,16 @@ CC=/opt/local/bin/clang++ meson setup build
 # neither does this :-(
 CC_FOR_BUILD=/opt/local/bin/clang++ meson setup build
 ```
-> see [epilog](#epilog); I did not set `CXX` and `CXX_FOR_BUILD` at 
-> this step; would have saved me 30 minutes if did properly RTFM.
+> [!NOTE]
+> See [epilog](#epilog); I did not set `CXX` and `CXX_FOR_BUILD` at 
+> this step; would have saved me 30 minutes if I did properly RTFM.
 
 I finally had to use the `--native-file` option, which at first did not
 work &mdash; for like 30 minutes I was scratching my head and feverishly
-searching `SO`. Since I ran out of options, and since there was nothing
-else to try, I went for `rm -rf build`; and like magic it works. While
-I am thrilled that it worked, it did not give me the good vibes I was
-hoping to get out of *meson*.
+searching [`SO`](^2). Since I ran out of options, and since there was
+nothing else to try, I went for `rm -rf build`; and like magic it works.
+While I am thrilled that it worked, it did not give me the good vibes I
+was hoping to get out of *meson*.
 
 > Cache can be your friend, cache can be your worst enemy!
 > It can save you time and suck away time if you ignore it.
@@ -301,23 +298,26 @@ feeling that it is strongly opinionated software that lacks coherence.
 
 Speaking of opinions I have a few of my own from the whole ordeal.
 
-- It makes no sense to not be able to specify the compiler in *meson.build*
-- Weak sauce argument on why they chose to make *meson.build* 
-  Turing-incomplete.  Do they really believe that *meson* will
-  be around and `Python` will go away?
+- The DX would have been better if *meson* automatically looked for
+  `native.ini` and read it without having to use `--native-file` option.
 - Having to specify env variables (that too using a file and an extra
   cli argument) outside the build script for *meson* to do the 
   right thing is simply ignoring developer experience. On any
   given day the poor developer has to remember two dozen things to
   get his or her job done. Having to remember yet another dimension
   is unnecessary pain inflicted for no good reason.
+- Weak sauce argument on why they chose to make *meson.build* 
+  Turing-incomplete.  Do they really believe that *meson* will
+  be around and `Python` will go away?
 - The script file already allows conditionals and loops, so the argument
   for not being Turing-complete seems bogus to me.
 
 My first impression of *meson* is that it baked into its implementation
 some strong opinions that most likely were truthy at some point in time,
 and probably served the authors of *meson* well on their job. At present
-times however, it just feels odd to embrace those opinions. 
+times however, it just feels odd to embrace those opinions. Either that
+or I am far removed from the nuances of what it takes to design a meta
+build tool that just works for the happy paths.
 
 I can buy into the convention over configuration argument; but I have
 a difficult time adopting conventions and configurations that have a 
@@ -349,11 +349,6 @@ For a harried developer who just wants to build software, that is
 increasingly becoming complex, `meson` just adds more complexity for
 no good reason (that my attention deficited mind can comprehend).
 
-The next hop for me is to investigate Google's `gn` (generate ninja)
-program. I don't know when I will get to it, but you can read about
-it when I do by either pulling the  RSS feed or signing up to our 
-newsletter.
-
 ## Epilog
 To be able to override the default compiler that *meson* uses, one must
 set `CC`, `CC_FOR_BUILD`, `CXX`, and `CXX_FOR_BUILD` vars on CLI like so:
@@ -374,11 +369,13 @@ as I tried to get things to work.
 
 I hear you; it's open source. So use it, or don't, or fix it; just don't
 complain. Fair. At this point, I still have the option to explore `gn` 
-before I can arrive at a conclusion on which way to go.
+before I can arrive at a conclusion on which way to go. So my next hop
+is to investigate Google's `gn` (generate ninja) program.
 
 To be continued...
 <!-- short links -->
 [^1]: https://waf.io/
+[^2]: https://stackoverflow.com
 
 ## References:
 - [WAF - The build system](https://waf.io/)

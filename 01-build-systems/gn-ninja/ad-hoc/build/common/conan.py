@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-from utils import run
+from utils import run, find_project_root, log_process_info
 
 
 def main():
@@ -10,4 +10,5 @@ def main():
 
 
 if __name__ == "__main__":
+    log_process_info(find_project_root() + "/" + "conan-install.log")
     main()

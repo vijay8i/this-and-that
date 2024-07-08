@@ -1,16 +1,14 @@
 # Is there such a thing as a perfect build system? (Part V)
 (thoughts in progress...)
 
-In part IV, I had to take a detour to learn about `conan`, in order to
-meet my preferential objective of picking tools that do one thing and
-do it well; and to build the `ad-hoc` project with minimal steps (for
-the developer or release engineer)
+In the field of software construction, most problems can be solved by
+adding another layer of indirection. The property I am looking for is
+to be able to (a) avoid those layers and (b) if needed, write the
+indirections myself with a basic understanding of how a tool works.
 
-> [!NOTE]
-> In the field of software construction, most problems can be solved by
-> adding another layer of indirection. The property I am looking for is
-> to be able to (a) avoid those layers and (b) if needed, write the
-> indirections myself with a basic understanding of how the tools work.
+In part IV I had to take a detour to learn about `conan`, a tool that
+seems to align with my preferences, in order to be able to build the
+`ad-hoc` project with minimal steps (for the developer or release engineer)
 
 To recap, the plan was:
 - [x] Figure out how to fetch third-party dependencies (`uv` and `uvw`).
@@ -18,15 +16,19 @@ To recap, the plan was:
 - [x] Finally use the `third-party` dependencies.
 
 The first step of fetching third-party dependencies using *conan* took
-more RTFM minutes than with *meson*. But I like working with tools
-that do one thing and do it well, so I think those extra RTFM minutes
-are worth it. The feature in *conan* that enables the creation of `pkg-config`'s
-`*.pc` files using `PkgConfigDeps` generator is foundational to the plan.
-In my opinion *pkg-config* is a simple and elegant solution to build 
-C/C++ dependencies. I recommend reading the [guide to `pkg-config`](^1)
-to learn about it. It has that property of do one thing and do it well.
-So all in all, for step 1 of my plan, I am happy to connect with *conan*
-and *pkg-config*, and add them to my toolchest.
+more RTFM minutes than with *meson*. Conan allows developers to write 
+*tasks* in Python which to me is a big *green* flag, so I think those
+extra RTFM minutes are worth it. The feature in *conan* that enables the
+creation of `pkg-config`'s `*.pc` files using `PkgConfigDeps` generator
+is foundational to my plan.
+
+> [!TIP]
+> *pkg-config* is an elegant solution to `pubsub` C/C++ dependencies. I
+> recommend reading the [guide to `pkg-config`](^1) to learn about it. 
+> It has that property of do one thing and do it well.
+
+I am happy to connect with *conan* and *pkg-config*, and happy to welcome
+both into my toolchest.
 
 [^1]: https://people.freedesktop.org/~dbn/pkg-config-guide.html
 
@@ -66,7 +68,7 @@ executable("main") {
 }
 ```
 
-It took several iterations and plenty of RTFM minutes, and trawling 
+It took several iterations and plenty of *gn* RTFM minutes, and a trawl 
 through *gn*'s newsgroup messages for answers, before I got something
 working. 
 
@@ -87,24 +89,23 @@ remember to get started on a project.
 > adoption and on an ongoing basis. On balance a `git submodule` approach
 > has the same set of issues if not managed for security.
 
-
 The reason I had trouble in getting a seemingly trival task accomplished
 using *gn* was because I did not understand `action` and `template` in
 depth. I sort of could infer what roles `action` and `template` function
 blocks take. The former is used by the build tool during the build whereas
-the latter is used by *gn* itself while generating the build files for
-*ninja*. I was trying to install dependencies using *conan* in a *action*
-block; since that action is not executed until build time, the subsequent
-step to retrieve `pkg-config` info from those dependencies would fail
-(since the *action* never ran). This became apparent after [reading this thread](^1)
+the latter is used by *gn* itself to generate build files for *ninja*. I
+was trying to install dependencies using *conan* in a *action* block; since
+that action is not executed until build time, the subsequent step to retrieve
+`pkg-config` info from those dependencies would fail (since the *action*
+never ran). This became apparent after [reading this thread](^1)
 about the difference between `action` and `exec_script`.
 
 > [!TIP]
 > It might be obvious to those working with build systems but was not
 > to me. And that is the notion of `gen-time` vs `build-time`, which in
-> hind sight is like doh! kind of realization. During `gen-time`, *gn*
+> hind sight is like a doh! kind of realization. During `gen-time`, *gn*
 > generates the necessary build files, and during `build-time` *ninja* 
-> executes those `build files`. So, *actions*s are for *ninja* and *templates*
+> *executes* those `build files`. So, *actions*s are for *ninja* and *templates*
 > are for *gn*. It get's confusing because a *template* can include an
 > *action*. One way to make sense is to see the *action* as an `async` 
 > function that is `awaited` for by `ninja`.
@@ -238,12 +239,13 @@ This is achieved by validating an internally constructed build graph from
 all the input files that are parsed to build a DAG of targets (and other
 stuff). Any unused target becomes questionable, and *gn* was complaining
 that my target 'install_third_party_packages' is unused. It is up to me
-now decide if I needed it and keep it or remove it otherwise. Obviously
-I need the function to execute but I don't care about using the target
-directly in my executable. How to go about fixing this situation was not
-obvious to me at all. The solution, it turns out, is to satisfy *gn* by 
-stating that 'install_third_party_packages' is a `meta-target` like here
-in `//build/common/conan.gni`:
+now to decide if I needed it and keep it or remove it otherwise. 
+
+Obviously I need the function to execute but I don't care about using the
+target directly in my executable. How to go about fixing this situation
+was not obvious to me at all. The solution, it turns out, is to satisfy
+*gn* by stating that 'install_third_party_packages' is a `meta-target`
+like here in `//build/common/conan.gni`:
 
 ```lua
   group(target_name) {
@@ -280,7 +282,7 @@ up more elegant build setups.
 I think I am on the home stretch now. Coming up with a plan and accomplishing
 it feels good. But the job is not done. I want to have release and debug
 builds, and want to be convinced that I am not slowing down *ninja* because
-of build-time dependencies that should have been gen-time dependencies. 
+of *build-time* dependencies that should have been *gen-time* dependencies. 
 Finally, do an honest evaluation of the build setup and be able to arrive
 at some conclusions at the end of a journey.
 

@@ -3,6 +3,8 @@
 - [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
 - [CPPCon 2023](https://github.com/CppCon/CppCon2023)
 - [Subspace (of safe C++)](https://orodu.net/)
+- [Sanitizers](https://github.com/google/sanitizers/wiki)
+- [C++ 23 Status Report, all features with examples](https://github.com/steve-downey/papers/blob/master/wg21-status.org)
 
 # Curious minds want to know
 ## Explicit template instantiation
@@ -26,7 +28,11 @@
 ## Higher order functions
 - file:///Users/vijay/Downloads/higher_order_functions_ndc_oslo_2018.pdf
 
-# Design patterns
+# Enterprise Design Patterns
+### Message Bus
+- https://seanballais.com/blog/implementing-a-simple-message-bus-in-cpp/
+
+# Classic Design Patterns
 ## Creational
 ## Singleton
 - https://github.com/hnrck/singleton_example

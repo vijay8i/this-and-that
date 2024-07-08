@@ -7,8 +7,9 @@ template("conan_install") {
                          ])
   assert(defined(conanfile), "conanfile must be set")
   assert(defined(deploy_dir), "deploy_dir must be set")
-  print("source-absolute directory name", rebase_path(deploy_dir, "."))
-  print("source-absolute file name", rebase_path(conanfile, "."))
+
+  # print("source-absolute directory name", rebase_path(deploy_dir, "."))
+  # print("source-absolute file name", rebase_path(conanfile, "."))
 
   deploy_dir = rebase_path(deploy_dir, ".")
   _args = [

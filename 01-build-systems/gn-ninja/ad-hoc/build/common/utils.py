@@ -6,9 +6,19 @@ import shlex
 import subprocess
 import sys
 import os
+import datetime
 import errno
 
 """Collection of utility functions used by the build system"""
+
+import os
+
+
+def log_process_info(file_path):
+    with open(file_path, 'a') as file:
+        pid = os.getpid()
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        file.write(f"{pid} - {timestamp}\n")
 
 
 def run(cmd, args=[], check=False):
@@ -49,7 +59,7 @@ def find_project_root():
         if '.gn' in os.listdir(current_path):
             return current_path
         current_path = os.path.dirname(current_path)
-    return None
+    return "./"
 
 
 def set_config_path(path):
