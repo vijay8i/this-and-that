@@ -10,9 +10,7 @@ build scripts are code (to me).
 In Part I through Part V, I reminisced about *waf.io* and how it lets
 you write build tasks in Python. Did some head banging with *meson*
 since I prefer my way of laying out source code which *meson* did not
-appreciate.  
-
-So, I finally decided to triple down on *gn* + *conan* + *ninja* combo
+appreciate. And, I finally decided to triple down on *gn* + *conan* + *ninja* combo
 because:
   - they work well together and stay out of each other's business 
   - each does one thing and does it well 
