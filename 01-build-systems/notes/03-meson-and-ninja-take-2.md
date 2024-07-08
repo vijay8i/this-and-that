@@ -1,9 +1,9 @@
 # Is there such a thing as a perfect build system? (Part III)
 (thoughts in progress...)
 
-In Part II, I left my quest to find a perfect build system, that meets my
-requirements and preferences, wanting to move forward to build the 
-`ad-hoc` project with *gn* to compare with the experience of building
+In Part II, I left my search for a build system that meets my requirements
+and preferences on a positive note, and wanted to move forward to build
+the `ad-hoc` project with *gn* to compare with the experience of building
 the same using *meson*.
 
 Reading what I wrote again (in Part II), the fairness guy (in me) was

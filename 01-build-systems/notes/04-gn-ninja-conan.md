@@ -4,7 +4,7 @@
 In Part III, I concluded that learning *gn* is a better investment of 
 time than *meson*. Learning is not free and mastering anything takes
 time. To be clear, if you are comfortable with *cmake* or *meson* then
-good for you, keep using it &mdash; after all, perfection is in the eye
+good for you, keep using it &ndash; after all, perfection is in the eye
 of the beholder.
 
 My search for a better meta build tool started only because it's been
@@ -29,7 +29,7 @@ to fetch and build the dependencies, and then context switch to
 `experiments/using-uvw` folder. It would be better to do that in one
 step from within the project root. I think it is possible with *meson*,
 but my understanding is that it requires the use of *subproject*, which
-I avoided using &mdash; simply because I decided, for no good reason,
+I avoided using &ndash; simply because I decided, for no good reason,
 to hold the folder structure of `experiments/using-uvw` as immutable.
 
 A quick recap of the properties that I am looking for in my build system.
@@ -41,16 +41,17 @@ A quick recap of the properties that I am looking for in my build system.
 - [ ] most importantly the tool should not dictate how to layout my code
 
 So far, *gn* and *ninja* check off these boxes. But we still need to
-figure out how to fetch third-party dependencies. There are other tools 
-under `depot_tools` from Google for fetching and syncing source code,
-which seem to be tightly coupled to the needs of Google's own projects. 
+figure out how to fetch third-party dependencies. There are tools 
+available under `depot_tools` umbrella from Google for fetching and 
+syncing source code, which are tightly coupled to the needs of Google's
+own projects &mdash; and so do not meet my requirements.
 
 Therefore, I decided to go with `conan` for fetching third-party
 dependencies. I have no idea how that is going to turn out. But we
 have to start somewhere, and so here is the plan:
 - Figure out how to fetch third-party dependencies (`uv` and `uvw`).
-- Integrate the previous step using *gn* `actions`.
-- Finally use the `third-party` dependencies.
+- Integrate the previous step using *gn* `actions`(?).
+- Finally *use* the `third-party` dependencies.
 
 ## Conan detour
 Steps to install, configure and get going with `conan`.
@@ -203,7 +204,7 @@ in trying to build my `ad-hoc` project. It was not as easy as it was
 with `meson`! There were times when I almost was ready to eat my words
 and get back to the trodden path of comfort that `cmake` provides; or 
 hear myself saying that I could salvage this quest by settling with 
-*meson*, and claim to have found something better than *cmake*. 
+*meson*, and go about claiming to have found something better than *cmake*. 
 
 Most answers to the question, "Is there a better way," often have this 
 struggle built in. You have to climb the hill without knowing if you

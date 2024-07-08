@@ -9,7 +9,7 @@ simplification here). I mean when the scope is limited, there's fewer
 ways to go screw up; *ninja* just does its job and stays out of your
 way. Good for *ninja* and that's all there is to be said about *ninja*.
 
-The search &mdash; focus for this *series* &mdash; is to find the right
+The search &mdash;focus for this *series*&mdash; is to find the right
 artist to take on the role of a `meta build tool`. That is a tough role
 requiring real hardwork; the artists that made it to the final list were
 `cmake`, `meson`, and `gn`. Sorry to say but `cmake` was sent home out
@@ -21,14 +21,16 @@ The role of a *meta build tool* is complex and multidimensional. To
 programming languages, linkers, and tools. Which makes it hard to appease
 all developers of diverse experience levels.
 
+> [!NOTE]
 > I realize I was overly critical of *meson*; so fwiw and for the
 > record, let me say that I respect how much one can accomplish
 > using *meson* with just  a day's worth of RTFM (I know, I am a 
 > slow reader).
 
 I left Part I concluding that `meson` is not for me; and that I have
-to explore `gn` + `ninja` combo in my quest to find the perfect build 
-system. That is the topic for today.
+to explore `gn` + `ninja` combo before figuring out which way to go.
+
+That is the topic for today.
 
 ## Learning from experience
 Getting things working with *meson* for an ad-hoc project structure
@@ -66,15 +68,14 @@ simple
 I started with the [quick start document](^1) and worked my way through
 to create the `simple` structure.
 
-The general concepts in *gn* are similar to *cmake* and *meson* &mdash; 
-create a directory structure that breaks the system into subsystems, 
-functional blocks (features) and modules (components); and then describe
-what each folder contains in a `BUILD.gn` file in that folder. Each 
-target (defined in *BUILD.gn*) can be referenced as a dependency by 
-others, and the target can declare its own dependencies. At the top level,
-create one or more `group` of features and declare the dependencies for
-each. Btw, the `group` name becomes a target that can be used to direct
-`ninja` what to build.
+The general concepts in *gn* are similar to *cmake* and *meson*. Create 
+a directory structure that breaks the system into subsystems, functional
+blocks (features) and modules (components); and then describe what each
+folder contains in a `BUILD.gn` file in that folder. Each target (defined
+in *BUILD.gn*) can be referenced as a dependency by others, and the target
+can declare its own dependencies. At the top level, create one or more
+`group` of features and declare the dependencies for each. The `group`
+name can also be a target that can be used to direct `ninja` what to *build*.
 
 > [!TIP]
 > Remember to design your build like code.
@@ -335,7 +336,7 @@ Median: 3.00
 Nice. With this initial experience I think I am ready to go the distance
 with *gn* and take on the `ad-hoc` project. Recall that I did not follow
 the suggested guidelines of *meson* to use *subprojects* to set it up
-and that created some rant from me. In addition it has a few challenges
+and that generated some rant from me. In addition it has a few challenges
 like fetching third party dependency (`uvw`) that in turn depends on
 `uv`, which *meson* handled admirably.
 

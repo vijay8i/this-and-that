@@ -30,8 +30,6 @@ is foundational to my plan.
 I am happy to connect with *conan* and *pkg-config*, and happy to welcome
 both into my toolchest.
 
-[^1]: https://people.freedesktop.org/~dbn/pkg-config-guide.html
-
 In the second step I hit a wall so hard that I almost gave up on *gn*.
 What I wanted to achieve was to be able to specify the `third-party`
 dependency packages required by a target and then automatically invoke
@@ -39,7 +37,7 @@ dependency packages required by a target and then automatically invoke
 files that I can later reference and use to build my target.
 
 Seeing the *BUILD.gn* for the target I was trying to build can provide
-a better explaination than me rambling. So here it is, the contents of
+a better explanation than me rambling. So here it is, the contents of
 `ad-hoc/experiments/using-uvw/BUILD.gn`:
 
 ```lua
@@ -97,18 +95,19 @@ the latter is used by *gn* itself to generate build files for *ninja*. I
 was trying to install dependencies using *conan* in a *action* block; since
 that action is not executed until build time, the subsequent step to retrieve
 `pkg-config` info from those dependencies would fail (since the *action*
-never ran). This became apparent after [reading this thread](^1)
+never ran). This became apparent after [reading this thread](^2)
 about the difference between `action` and `exec_script`.
 
 > [!TIP]
-> It might be obvious to those working with build systems but was not
-> to me. And that is the notion of `gen-time` vs `build-time`, which in
-> hind sight is like a doh! kind of realization. During `gen-time`, *gn*
-> generates the necessary build files, and during `build-time` *ninja* 
-> *executes* those `build files`. So, *actions*s are for *ninja* and *templates*
-> are for *gn*. It get's confusing because a *template* can include an
-> *action*. One way to make sense is to see the *action* as an `async` 
-> function that is `awaited` for by `ninja`.
+> It might be obvious to those working with build systems is their main
+> job function. And that is this notion of `gen-time` vs `build-time`, 
+> which in hind sight is like a doh! moment having worked with *cmake*.
+> During `gen-time`, *gn* generates the necessary build files, and during
+> `build-time` *ninja*  executes those `build files`. So, *actions*s are
+> for *ninja* and *templates* are for *gn*. It get's confusing because a
+> *template* can include an *action*. One way to make sense is to see the
+> *action* as an `async` function bundled by *gn* that is then `awaited`
+> for by `ninja`.
 
 After a bit more of head banging, it became clear that the stuff I wanted
 to automate required template functions, not actions. I ended up with two
@@ -117,7 +116,7 @@ scripts are not important as they are trivial in what they do.
 
 The first template(`//build/common/conan.gni`) provides the automation to
 fetch dependencies uisng *conan*. I see it as a *seed* from which the full
-cababilities of *cmake*'s `FetchContent_*` can be implemented.
+cababilities of *cmake*'s `FetchContent_*` suite can be implemented.
 ```lua
 template("conan_install") {
   forward_variables_from(invoker,
@@ -216,7 +215,7 @@ the `conan` template to kind of work, I was stumped at figuring out how
 to use it in my target. 
 
 I was getting this unhelpful message from *gn* at all attempts of mine to
-use the template (which was incorrectly, initially):
+use the template &mdash;incorrectly, initially:
 ```bash
 ERROR at //experiments/using-uvw/BUILD.gn:4:1: Assignment had no effect.
 conan_install("install_third_party_packages") {
@@ -267,7 +266,7 @@ or unaccounted *targets* make *gn* unhappy, unless you tell it, which I
 did by using `group` function.
 
 After sorting out that last bit, I have a setup that is better than what
-I got from *meson* &mdash; subjectively speaking. I am happy with the
+I got from *meson* &mdash;subjectively speaking. I am happy with the
 results so far considering the fact that I barely managed to get my feet
 wet with *gn* and *conan*, and didn't even look into *ninja*. I can see
 that once I get comfortable with *gn* templates and actions, I could whip
@@ -283,13 +282,12 @@ I think I am on the home stretch now. Coming up with a plan and accomplishing
 it feels good. But the job is not done. I want to have release and debug
 builds, and want to be convinced that I am not slowing down *ninja* because
 of *build-time* dependencies that should have been *gen-time* dependencies. 
-Finally, do an honest evaluation of the build setup and be able to arrive
-at some conclusions at the end of a journey.
 
 To be continued...
 
 <!-- short links -->
-[^1]: https://groups.google.com/a/chromium.org/g/gn-dev/c/x4uy_Mhdb_Q/m/-G6r4X17AAAJ
+[^1]: https://people.freedesktop.org/~dbn/pkg-config-guide.html
+[^2]: https://groups.google.com/a/chromium.org/g/gn-dev/c/x4uy_Mhdb_Q/m/-G6r4X17AAAJ
 
 # References
 - [GN template best practices](https://fuchsia.dev/fuchsia-src/development/build/build_system/best_practices_templates)

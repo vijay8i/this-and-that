@@ -33,8 +33,8 @@ gave myself the task of creating *release* and *debug* builds of the
 to declare build arguments. It only took a couple of RTFM minutes to
 declare and make use of it to configure the build. I was mildly confused
 between the `args` command and `--args` option in *gn*; the former is used
-to query what arguments are *available* for a build and the latter is used
-to setup the build with the args specified. 
+to query what arguments have been *set* for a build and the latter is used
+to *setup* the build with the args specified. 
 
 Anyway, here are the required changes to `build/BUILCONFIG.gn`:
 
@@ -206,18 +206,23 @@ You won't find a list of pros and cons in this section for I did not
 set out to write that kind of article; heck, I didn't even think I was
 writing an article. That is not to say, there aren't pros and cons when
 choosing a build system. There will always be pros and cons to anything
-we touch and use. At an abstract level, I do not like products that work
-hard to dumbify the user, to the point where no one knows what a button
-does and why. I see a red flag whenever I find the word "easy" in the
-documentation of a product.
+we touch and use. However, I do have a few thoughts on the nature and 
+purpose of my quest.
+
+At an abstract level, I do not like products that work hard to dumbify
+the user, to the point where no one knows what a button does and why. I
+see a red flag whenever I find the word "easy" in the documentation of
+a product.
 
 So, better is not easy. Better to me is when I enjoy working with a tool
 or within a system to build or create something that helps me or others.
 It is the process I mostly care about, and every step of that process 
 should be something I can reason about and make sense. Good tools and
-systems are lean on policy and rich in mechanisms.
+systems are lean on policy and rich in mechanisms. If I can compose using
+those mechanisms with minimal context, that makes the tool or the system
+better.
 
-Finding the perfect build system is a dead end. What you have often is
+There is no such thing as a perfect build system. What you have often is
 either a *de facto* or *de jure* build system.  Without a doubt, *cmake*
 is the *de facto* build system for C/C++ projects. It may also be the
 *de jure* in many organizations. So, you can't go wrong investing time
@@ -228,6 +233,6 @@ the *status quo*, I think the combination of `gn` + `conan` + `ninja` is
 worth considering. I enjoyed the process, both the discovery and making
 use of this trio. 
 
-The fake rebels can settle for *meson*. To each their own.
+The fake rebels can settle for *meson*. To each their own. Peace.
 
-Peace /fin.
+/fin.

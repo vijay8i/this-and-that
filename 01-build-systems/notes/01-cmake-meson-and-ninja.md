@@ -18,12 +18,12 @@ is no such thing as a perfect build system. I have not found one yet that
 is free from warts, quirks, and kinks; so far. But that should not
 stop us from looking for it.
 
-Reality of modern software development however is that we have to deal
-with dozens of dependencies that come with their own build systems, and
-*waf* to my knowledge doesn't handle integration with those dependencies
-well &mdash; if I recall correctly, you end up writing a bunch of Python
-code to work with third-party dependencies, which if written poorly can
-slow you down with long build times.
+Reality of modern software development is that we have to deal with dozens
+of dependencies that come with their own build systems, and *waf* to my
+knowledge doesn't handle integration with those dependencies well. My
+recollection is that you end up writing a bunch of Python code to work
+with third-party dependencies, which if written poorly can slow down the
+build process.
 
 > [!NOTE]
 > It's possible that *waf* may have addressed the kind of issues I had
@@ -35,20 +35,19 @@ If performance is the main concern then a two step build pipeline is
 arguably the way to go. The first step generates a build file and the
 second step runs the build file with as much parallelism as possible. 
 This two step process was made popular by a tool named `ninja` which
-takes charge of the second step while leaving the dirty details of
-dealing with dependencies to meta build tools such as `cmake`, `meson`
-and whole bunch of others in this space.
+takes charge of the **second** step. 
 
 Ninja was designed with constraints of what it can do, what it wants to
 do and what it does to a very narrow scope which is to compile a large
-code base fast by chomping through one or more assembly file(s).
+code base fast by chomping through one or more assembly file(s) that
+contain sequence of instructions. 
 
 While such assembly file(s) can be written by hand, it can get tricky
 and feels like grunt work very quickly. Ninja leaves the DX of creating
-such files to other tools such as CMake and Meson, which provide constructs
-such as loops and conditionals to create the assembly of instructions 
-for *ninja* to chomp at to produce the artefacts (executables, libraries,
-docs, ...) 
+such files to meta build tools such as `cmake` and `meson` among others,
+which provide higher order constructs that get transformed into the 
+assembly of instructions for *ninja* which then builds the artefacts
+(executables, libraries, docs, ...).
 
 For step 1, the most popular choice is *cmake*. But `CMakeLists.txt`
 syntax is simply not for me; it gives me allergies. I get it that it is
@@ -59,10 +58,10 @@ provide a well designed build-systems specific library to achieve the
 same result. Or at the very least use syntax that doesn't require a
 cognitive context switch.
 
-So, I am looking for an alternative to `cmake` and Internet tells me that
-I have two options: *gn*, and *meson*. Meson is the closest thing that
-fits my preference for syntax; it is pythonic and often seen in use with
-*ninja* in many foss projects.
+So, I am looking for an alternative to *cmake* and Internet tells me that
+I have two options: *gn*, and *meson*. Meson seemed to fit my preference
+for syntax; it is pythonic and often seen in use with *ninja* in many
+foss projects.
 
 This article goes into the details of getting a simple program in C++
 built with a couple of 3rd party library dependencies, and write down
@@ -100,14 +99,14 @@ is non-intuitive to fulfill with either *cmake* or *meson*. Both tools
 quickly start *suggesting* how to setup the project structure the way
 *they* want rather than how *I* want.
 
-I had two alternatives: resort to using a Makefile or learn more on how
-to make it work with either *cmake* or *meson*. Make is wild; and I have
+I had two alternatives: resort to using a *Makefile* or learn more on how
+to make it work with either *cmake* or *meson*. *Make* is wild; and I have
 enough scars to remind me to not go near it. Given my dislike for
 *cmake*'s DSL, and considering *meson*'s DSL is closer to Python, I 
 decided to go with *meson*.
 
 Getting started with *meson* seemed easy enough. Took only couple of 
-`RTFM` minutes.
+*RTFM* minutes.
 
 ```sh
 # install meson using pip3
@@ -136,7 +135,7 @@ That is really cool.
 > and keep the source in sync with remote (for a specified release tag
 > or hash). This would only work if everyone agreed on a universal 
 > `meta build tool`. A topic that quickly crosses into a different
->  dimension, which I will not get into for this exercise. Yes, I know 
+> dimension, which I will not get into for this exercise. Yes, I know 
 > *cmake* can do this... but it doesn't have my vote to be the universal
 > *meta build tool* for various reasons, including the syntax.
 
@@ -220,6 +219,7 @@ I could either change the system `c++` default or somehow figure out
 how to make meson and ninja talk to each other on which compiler to
 use &mdash; the fear of the unknown long term pain vs short term pain?
 
+> [!TIP]
 > Take the short term pain when you can handle it, always.
 
 I thought I could smartypant my way out by setting environment variables
@@ -233,10 +233,10 @@ env.set('CC', '/opt/local/bin/clang++')
 env.set('CC_FOR_BUILD', '/opt/local/bin/clang++')
 ```
 
-I should have know that was a dead end `executable()` doesn't does not
-accept it as an argument. Remember that I am just trying to see how far
-I can go with my conceptual knowledge without having to learn *meson*
-in depth. 
+I should have known that would not work since `executable()` doesn't
+accept an *environment* argument. Remember that I am just trying to see
+how far I can go with my conceptual knowledge without having to learn
+*meson* in depth. I know I am not being fair to *meson*! 
 
 ```shell
 C++ compiler for the host machine: c++ (clang 15.0.0 "Apple clang version 15.0.0 (clang-1500.1.0.2.5)")
@@ -336,18 +336,18 @@ docs, set the necessary exports and what not.
 There are many such good intents badly designed in meson. To be sure 
 however, I understand that build systems are complex, and requires an
 enormous effort and community to get it right. My ranting is in no way
-an attempt to throw shade at *meson*. I appreciate that I managed to get
-to build an artefact out of an ad hoc project structure using *meson* 
-and that is fricking cool.
+an attempt to throw shade at *meson*. I appreciate that I managed to 
+build an artefact out of an ad hoc project structure using *meson* and
+that is fricking cool.
 
 In summary, my hunt for a perfect build system for C/C++ projects is not
-over. I really hoped that `meson` would be it. Unfortunately it is not
+over. I really hoped that `meson` could be it. Unfortunately it is not
 because imo it violates the `principle of least surprise` step after
 step after a mere few steps of using it.
 
 For a harried developer who just wants to build software, that is 
-increasingly becoming complex, `meson` just adds more complexity for
-no good reason (that my attention deficited mind can comprehend).
+increasingly becoming complex, `meson` adds complexity for no good
+reason (that my attention deficited mind can comprehend).
 
 ## Epilog
 To be able to override the default compiler that *meson* uses, one must
@@ -363,8 +363,8 @@ was for nothing, and can be brushed away as a skills issue. :roll_eyes:, sigh!
 Still, the pitfalls exist. 
 
 You have to remember to `rm -rf build` to ensure that environment 
-variables get picked up and get used. And why can't I set the environment
-variables for `executable` or `project`? And many more questions arose
+variables get picked up and get used. And, why can't I set the environment
+variables for `executable` or `project`? And, many more questions arose
 as I tried to get things to work. 
 
 I hear you; it's open source. So use it, or don't, or fix it; just don't
