@@ -254,13 +254,13 @@ group(target_name) {
 }
 ```
 
-The `group()` _function_ allows you to create `meta-target`s that collect a set
+The `group()` _function_ allows you to create _meta-targets_ that collect a set
 of dependencies into one named target. In my case, the target doesn't produce
 any build output itself, but it is required to execute in order for other
 dependencies to build. Since the Conan installation happens during `gen-time`,
 we need a way to represent this in the _gn_'s build graph to keep it happy. It
 is happy if the DAG it constructs internally is _accounted_ for all _targets_
-appearing in BUILD.gn files either directly or indirectly and have a purpose.
+appearing in BUILD.gn files either directly or indirectly, and have a purpose.
 Any unused or unaccounted _targets_ make _gn_ unhappy, unless you tell it, which
 I did by using `group` function.
 
@@ -279,10 +279,10 @@ setups.
 # Where am I?
 
 I think I am on the home stretch now. Coming up with a plan and accomplishing it
-feels good. But the job is not done. I want understad how to _configure_ a build
-produce release and debug artefacts, and be convinced that I am not slowing down
-_ninja_ because of _build-time_ dependencies that should have been _gen-time_
-dependencies.
+feels good. But the job is not done. I want to understand how to _configure_ a
+build to produce release and debug artefacts, and be convinced that I am not
+slowing down _ninja_ because of _build-time_ dependencies that should have been
+_gen-time_ dependencies.
 
 To be continued...
 
