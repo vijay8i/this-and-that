@@ -1,40 +1,41 @@
 # Is there such a thing as a perfect build system? (Part VI)
+
 (thoughts in progress...)
 
-If you landed here without context, start with Part I to understand 
-where the journey begins. The TL;DR version is I was curious to know
-if there are alternatives (in 2024) that are as good or better than *cmake*.
-But why even bother? Because I am a sucker for clean readable code, and
-build scripts are code (to me).
+If you landed here without context, start with Part I to understand where the
+journey begins. The TL;DR version is I was curious to know if there are
+alternatives (in 2024) that are as good or better than _cmake_. But why even
+bother? Because I am a sucker for clean readable code, and build scripts are
+code (to me).
 
-In Part I through Part V, I reminisced about *waf.io* and how it lets
-you write build tasks in Python. Did some head banging with *meson*
-since I prefer my way of laying out source code which *meson* did not
-appreciate. And, I finally decided to triple down on *gn* + *conan* + *ninja* combo
-because:
-  - they work well together and stay out of each other's business 
-  - each does one thing and does it well 
-  - the DSL of each reads better to my eyes 
- 
-Using this trio got me to a setup that is better than *meson*, IMO, for
-dealing with third-party dependencies. But it did take me more time than
-anticipated. In the final stretch I have two things remaining that I 
-want to square off, and then wrap up.
+In Part I through Part V, I reminisced about _waf.io_ and how it lets you write
+build tasks in Python. Did some head banging with _meson_ since I prefer my way
+of laying out source code which _meson_ did not appreciate. And, I finally
+decided to triple down on _gn_ + _conan_ + _ninja_ combo because:
 
-1. How do I declare/define build arguments and inform *gn* to use
-   the arguments to configure the build?
-2. How can I be sure that the dependencies get installed at *gen-time*,
-   not *build-time*.
+- they work well together and stay out of each other's business
+- each does one thing and does it well
+- the DSL of each reads better to my eyes
 
-## Generating *debug* and *release* builds
-To figure out how to convey build time arguments via *gn* to *ninja*, I
-gave myself the task of creating *release* and *debug* builds of the 
-*ad-hoc* project's executable. Turns out `declare_args` is the magic word
-to declare build arguments. It only took a couple of RTFM minutes to
-declare and make use of it to configure the build. I was mildly confused
-between the `args` command and `--args` option in *gn*; the former is used
-to query what arguments have been *set* for a build and the latter is used
-to *setup* the build with the args specified. 
+Using this trio got me to a setup that is better than _meson_, IMO, for dealing
+with third-party dependencies. But it did take me more time than anticipated. In
+the final stretch I have two things remaining that I want to square off, and
+then wrap up.
+
+1. How do I declare/define build arguments and inform _gn_ to use the arguments
+   to configure the build?
+2. How can I be sure that the dependencies get installed at _gen-time_, not
+   _build-time_.
+
+## Generating _debug_ and _release_ builds
+
+To figure out how to convey build time arguments via _gn_ to _ninja_, I gave
+myself the task of creating _release_ and _debug_ builds of the _ad-hoc_
+project's executable. Turns out `declare_args` is the magic word to declare
+build arguments. I was mildly confused between the `args` command and `--args`
+option in _gn_ at first. I figured out that the former is used to query what
+arguments have been _set_ for a build and the latter is used to _setup_ the
+build with the args specified.
 
 Anyway, here are the required changes to `build/BUILCONFIG.gn`:
 
@@ -71,8 +72,9 @@ config("release_config") {
 }
 ```
 
-With the above changes, the *build_type* arg can be set on the command
-line and queried as below:
+With the above changes, the _build_type_ arg can be set on the command line and
+queried as below:
+
 ```bash
 # generate release build
 $ gn gen out/release --args='build_type="release"'
@@ -107,23 +109,24 @@ build_type
 $ gn args --list=build_type --overrides-only out/debug
 ```
 
-I think it would be cool if I can figure how to set the *build_type*
-based on *out_dir*, so I can avoid having to use *--args* cli option.
-That is an exercise for another day.
+I think it would be cool if I can figure how to set the _build_type_ based on
+_out_dir_, so I can avoid having to use _--args_ cli option. That is an exercise
+for another day.
 
-## Install dependencies at *gen-time*
-There is not a lot of material on *gn* that explicitly talks about its
-*philosophy* and *principles*. My understanding is that at the very least
-it is within the *gn*'s domain of concern to produce efficient *build.ninja*
-files to reduce the build time. However, that is not automatic. There is
-nothing *gn* can do if the build/release engineer inadvertently injects
-blocking functions into the instructions for *ninja*. This was my fear,
-since I was just getting to know *gn*.
+## Install dependencies at _gen-time_
 
-To make sure my third-party dependencies get installed at *gen-time*,
-I started examining the files that *gn* generated for *ninja*. And look
-for any log created by *ninja*; turns out, by default *ninja* keeps log
-of its activities in `.ninja_log` and there is no option to turn it off!
+There is not a lot of material on _gn_ that explicitly talks about its
+_philosophy_ and _principles_. My understanding is that at the very least it is
+within _gn_'s domain of concern to produce efficient _build.ninja_ files to
+reduce the build time. However, that is not automatic. There is nothing _gn_ can
+do if the build/release engineer inadvertently injects blocking functions into
+the instructions for _ninja_. This was my fear, since I was just getting to know
+_gn_.
+
+To make sure my third-party dependencies get installed at _gen-time_, I started
+examining the files that _gn_ generated for _ninja_. And look for any log
+created by _ninja_; turns out, by default _ninja_ keeps log of its activities in
+`.ninja_log` and there is no option to turn it off!
 
 ```log
 # ninja log v6
@@ -133,11 +136,11 @@ of its activities in `.ninja_log` and there is no option to turn it off!
 6863	6870	1720382120067502031	obj/ad-hoc.stamp	bef81623a49bbf09
 ```
 
-I was unable to find the format of this file but I can reasonably guess
-the first entry points to an activity of interest that took `9 - 1` units
-of time. I want to be sure that is just creating a timestamp file and not
-actually installing the dependencies in that step. Turning on all the
-available options in *ninja* still did not answer my question definitively:
+I was unable to find the format of this file but I can reasonably guess the
+first entry points to an activity of interest that took `9 - 1` units of time. I
+want to be sure that is just creating a timestamp file and not actually
+installing the dependencies in that step. Turning on all the available options
+in _ninja_ still did not answer my question definitively:
 
 ```bash
 $ ninja -v -d explain -d stats  -C out/release
@@ -166,13 +169,12 @@ FinishCommand           4       367.8           1.5
 path->node hash load 0.87 (84 entries / 97 buckets)
 ```
 
-> [!NOTE]
-> It would be nice if *ninja* had an option to include a timestamp on
-> its verbose output.
+> [!NOTE]\
+> It would be nice if _ninja_ had an option to include a timestamp on its
+> verbose output.
 
-Since the script (`conan.py`) to install the dependencies is in my
-control, I modified it to log to a file whenever it was called from
-`conan.gni` template:
+Since the script (`conan.py`) to install the dependencies is in my control, I
+modified it to log to a file whenever it was called from `conan.gni` template:
 
 ```python
 #!/usr/bin/env python3
@@ -191,50 +193,49 @@ if __name__ == "__main__":
     main()
 ```
 
-With the logging in place, I could see that a new entry is added to the
-log file whenever *gn* runs and not when *ninja* runs. Now I am sure that
-the dependencies are installed at *gen-time* and not at *build-time*. I
-also discovered that the script is invoked everytime *gn gen* command is
-issued. At first I thought that I should figure out a way to skip 
-invoking the script if the dependencies have been installed, by learning
-more *gn* fu. On second thought, I think that would be a wrong thing to
-work on since it is a concern of *conan*. I still would like to know if
-that is doable using *gn*, but for now I think this is good enough.
+With the logging in place, I could see a new entry added to the log file
+whenever _gn_ runs and not when _ninja_ runs. Now I am sure that the
+dependencies are installed at _gen-time_ and not at _build-time_. I also
+discovered that the script is invoked everytime _gn gen_ command is issued. At
+first I thought that I should figure out a way to skip invoking the script if
+the dependencies have been installed, by learning more _gn_ fu. On second
+thought, I think that would be a wrong thing to work on since it is a concern of
+_conan_. I still would like to know if that is doable using _gn_, but for now I
+think this is good enough.
 
 ## Wrap up
-I wanted to document my experience in revisiting an area of software 
-development that I haven't paid attention to for a long time, and that 
-is what I did up to this point. Anything that we touch and use has pros
-and cons, and it is tempting to end with such a list and call it a wrap.
-I won't do that since my quest has been subjective from the start, and
-creating such a list would feel out of context. Instead, let me just write
-down a few thoughts on the nature and purpose of my quest.
 
-At an abstract level, I do not like products that work hard to dumbify
-the user to the point where no one knows what a button does and why. I
-see a red flag whenever I find the word "easy" in the documentation of
-a product.
+I wanted to document my experience in revisiting an area of software engineering
+that I haven't paid attention to in a while; and it is done.
 
-So, better is not easy. Better to me is when I enjoy working with a tool
-or within a system to build or create something that helps me or others.
-It is the process I mostly care about, and every step of that process 
-should be something I can reason about and make sense. Good tools and
-systems are lean on policy and rich in mechanisms. If I can compose using
-those mechanisms with minimal context, that makes the tool or the system
-better.
+Anything that we touch and use has pros and cons, and it is tempting to end with
+such a list and call it a wrap. I won't do that since my quest has been
+subjective from the start, and creating such a list would feel out of context.
+Instead, let me just write down a few thoughts on the nature and purpose of my
+quest.
 
-There is no such thing as a perfect build system. What you have often is
-either a *de facto* or *de jure* build system.  Without a doubt, *cmake*
-is the *de facto* build system for C/C++ projects. It may also be the
-*de jure* in many organizations. So, you can't go wrong investing time
-in learning it.
+At an abstract level, I do not like products that work hard to dumbify the user
+to the point where no one knows what a button does and why. I see a red flag
+whenever I find the word "easy" in the documentation of a product.
 
-For the rebels who do not rest until they find something *better* than
-the *status quo*, I think the combination of `gn` + `conan` + `ninja` is
-worth considering. I enjoyed the process, both the discovery and making
-use of this trio. 
+So, better is not easy. Better to me is when I enjoy working with a tool or
+within a system to build or create something that helps me or others. It is the
+process I mostly care about, and every step of that process should be something
+I can reason about and make sense. Good tools and systems are lean on policy and
+rich in mechanisms. If I can compose using those mechanisms with minimal
+context, that makes the tool or the system better.
 
-I am not sure where to place *meson* on this spectrum. In the end, it
-is to each their own.
+There is no such thing as a perfect build system. What you have often is either
+a _de facto_ or _de jure_ build system. Without a doubt, _cmake_ is the _de
+facto_ build system for C/C++ projects. It may also be the _de jure_ in many
+organizations. So, you can't go wrong investing time in learning it.
+
+For the rebels who do not rest until they find something _better_ than the
+_status quo_, I think the combination of `gn` + `conan` + `ninja` is worth
+considering. I enjoyed the process, both the discovery and making use of this
+trio.
+
+I am not sure where to place _meson_ on this spectrum. In the end, it is to each
+their own.
 
 /fin.
