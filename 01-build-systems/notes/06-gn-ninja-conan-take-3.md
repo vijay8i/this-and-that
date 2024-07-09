@@ -212,7 +212,7 @@ Anything that we touch and use has pros and cons, and it is tempting to end with
 such a list and call it a wrap. I won't do that since my quest has been
 subjective from the start, and creating such a list would feel out of context.
 Instead, let me just write down a few thoughts on the nature and purpose of my
-quest.
+quest in conclusion.
 
 At an abstract level, I do not like products that work hard to dumbify the user
 to the point where no one knows what a button does and why. I see a red flag
@@ -221,8 +221,8 @@ whenever I find the word "easy" in the documentation of a product.
 So, better is not easy. Better to me is when I enjoy working with a tool or
 within a system to build or create something that helps me or others. It is the
 process I mostly care about, and every step of that process should be something
-I can reason about and make sense. Good tools and systems are lean on policy and
-rich in mechanisms. If I can compose using those mechanisms with minimal
+I can reason about and make sense of. Good tools and systems are lean on policy
+and rich in mechanisms. If I can compose using those mechanisms with minimal
 context, that makes the tool or the system better.
 
 There is no such thing as a perfect build system. What you have often is either
