@@ -38,7 +38,7 @@ fetch the packages but also install their pkg-config files that I can later
 reference to build my target.
 
 Seeing the _BUILD.gn_ for the target I was trying to build can provide a better
-explanation than me rambling. So here is the contents of
+explanation than me rambling. So here are the contents of
 `ad-hoc/experiments/using-uvw/BUILD.gn`:
 
 ```lua
@@ -67,8 +67,8 @@ executable("main") {
 }
 ```
 
-It took several iterations and plenty of _gn_ RTFM minutes, and a trawl through
-_gn_'s newsgroup messages for answers, before I got something working.
+It took several iterations and plenty of trawls through _gn_'s newsgroup
+messages looking for answers to get something working.
 
 Ignore for now and don't ask if this is the best way to build an executable, and
 instead focus on `conan_install` and `pkg_config` template function invocations.
@@ -89,12 +89,12 @@ one less step for the developer to remember to get started on a project.
 The reason I had trouble in getting a seemingly trival task accomplished using
 _gn_ was because I did not understand `action` and `template` in depth. I sort
 of could infer the roles of `action` and `template` function blocks. The former
-is used by the build tool during the build whereas the latter is used by _gn_
+is used by the _ninja_ during the build whereas the latter is used by _gn_
 itself to generate build files for _ninja_. I was trying to install dependencies
-using _conan_ in a _action_ block; since that action is not executed until build
-time, the subsequent step to retrieve `pkg-config` info from those dependencies
-would fail (since the _action_ never ran). This became apparent after
-[reading this thread](^2) about the difference between `action` and
+using _conan_ in an _action_ block; since that action is not executed until
+build time, the subsequent step to retrieve `pkg-config` info from those
+dependencies would fail (since the _action_ never ran). This became apparent
+after [reading this thread](^2) about the difference between `action` and
 `exec_script`.
 
 > [!TIP]\
@@ -105,16 +105,16 @@ would fail (since the _action_ never ran). This became apparent after
 > executes those `build files`. So, *actions*s are for _ninja_ and _templates_
 > are for _gn_. It gets confusing because a _template_ can include an _action_.
 > One way to make sense is to see the _action_ as an `async` function bundled by
-> _gn_ that is then `awaited` for by `ninja`.
+> _gn_ that is then `awaited` on by `ninja`.
 
-After a bit more of head banging, it became clear that the stuff I wanted to
-automate required template functions, not actions. I ended up with two template
-functions that allow me to check off the second step. The python scripts are not
-important as they are trivial in what they do.
+After a bit of head banging, it became clear that the stuff I wanted to automate
+required template functions, not actions. I ended up with two template functions
+that allow me to check off the second step. The python scripts are not important
+as they are trivial in what they do.
 
 The first template(`//build/common/conan.gni`) provides the automation to fetch
-dependencies uisng _conan_. I see it as a _seed_ from which the full
-cababilities of _cmake_'s `FetchContent_*` suite can be implemented.
+dependencies using _conan_. I see this as a _seed_ from which the full
+cababilities of _cmake_'s `FetchContent_*` suite could be implemented.
 
 ```lua
 template("conan_install") {
@@ -234,12 +234,11 @@ See //BUILD.gn:3:12: which caused the file to be included.
 ```
 
 One of the key ideas of _gn_ or any build metal tool for that matter is to
-ensure that the build files generated are correct and free of cycles. This is
-achieved by validating an internally constructed build graph from all the input
-files that are parsed to build a DAG of targets (and other stuff). Any unused
-target becomes questionable, and _gn_ was complaining that my target
-'install_third_party_packages' is unused. It is up to me now to decide if I
-needed it or remove it otherwise.
+ensure that the build instructions generated for _ninja_ are correct and free of
+cycles. This is achieved by validating the DAG of _targets_ from parsing the
+_*.gn_ files. Any unused target is questioned, and _gn_ was complaining that my
+target 'install_third_party_packages' is unused. It is up to me now to decide if
+I needed it or remove it otherwise.
 
 Obviously I need the function to execute but I don't care about using the output
 directly in my executable target. How to go about fixing this situation was not
@@ -255,15 +254,15 @@ group(target_name) {
 }
 ```
 
-The `group()` _function_ allows you to create `meta-targets` that just collect a
-set of dependencies into one named target. In my case, the target doesn't
-produce any build output itself, but it is required to execute in order for
-other dependencies to build. Since the Conan installation happens during
-`gen-time`, we need a way to represent this in the _gn_'s build graph to keep it
-happy. It is happy if the DAG it constructs internally can `account` for all
-**targets** appearing in BUILD.gn files either directly or indirectly have a
-purpose. Any unused or unaccounted _targets_ make _gn_ unhappy, unless you tell
-it, which I did by using `group` function.
+The `group()` _function_ allows you to create `meta-target`s that collect a set
+of dependencies into one named target. In my case, the target doesn't produce
+any build output itself, but it is required to execute in order for other
+dependencies to build. Since the Conan installation happens during `gen-time`,
+we need a way to represent this in the _gn_'s build graph to keep it happy. It
+is happy if the DAG it constructs internally is _accounted_ for all _targets_
+appearing in BUILD.gn files either directly or indirectly and have a purpose.
+Any unused or unaccounted _targets_ make _gn_ unhappy, unless you tell it, which
+I did by using `group` function.
 
 After sorting out that last bit, I have a setup that is better than what I got
 from _meson_ &mdash;subjectively speaking. I am happy with the results so far
@@ -280,9 +279,10 @@ setups.
 # Where am I?
 
 I think I am on the home stretch now. Coming up with a plan and accomplishing it
-feels good. But the job is not done. I want to have release and debug builds,
-and want to be convinced that I am not slowing down _ninja_ because of
-_build-time_ dependencies that should have been _gen-time_ dependencies.
+feels good. But the job is not done. I want understad how to _configure_ a build
+produce release and debug artefacts, and be convinced that I am not slowing down
+_ninja_ because of _build-time_ dependencies that should have been _gen-time_
+dependencies.
 
 To be continued...
 
