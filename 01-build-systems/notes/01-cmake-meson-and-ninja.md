@@ -5,7 +5,7 @@ Build systems are complex and often don't get much love from application
 developers, especially those working in organizations with dedicated
 build/release engineers. As a developer without the means to delegate
 build tasks, I am always interested in build systems that allow me to
-get the job done with low head banging.
+get the job done with a low count of head banging episodes.
 
 In this series, my aim is to explore the state of the art in build tools
 and document my experience. Let me start with the last tool I worked with
