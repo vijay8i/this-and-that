@@ -279,10 +279,10 @@ setups.
 # Where am I?
 
 I think I am on the home stretch now. Coming up with a plan and accomplishing it
-feels good. But the job is not done. I want to understand how to _configure_ a
-build to produce release and debug artefacts, and be convinced that I am not
-slowing down _ninja_ because of _build-time_ dependencies that should have been
-_gen-time_ dependencies.
+feels good. But the job is not done. I want to understand how to _configure_
+_gn_ to setup _ninja_ to build release and debug artefacts, and be convinced
+that I am not slowing down _ninja_ because of _build-time_ dependencies that
+should have been _gen-time_ dependencies.
 
 To be continued...
 
