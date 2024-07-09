@@ -1,55 +1,68 @@
 # Is there such a thing as a perfect build system? (Part I)
 (thoughts in progress...)
 
-An elegant build framework that I have used in the past is [`waf.io`](^1)
-and it worked well for our use cases. We wrote build tasks using `Python`
-by implementing steps required by *waf.io*, and ended up with code that
-builds code that in my opinion was readable and maintainable for any one
-coming in contact with it many moons later. 
+Build systems are complex and often don't get much love from application
+developers, especially those working in organizations with dedicated
+build/release engineers. As a developer without the means to delegate
+build tasks, I am always interested in build systems that allow me to
+get the job done with low head banging.
 
-However, *waf.io* has this design quirk of having to commit itself into
-version control post install. Ironically, this feature is what made me
-choose it for a complex build pipeline in my last startup. Developers
-could simply checkout the monorepo and start building without having to
-install any additional tools other than the standard compiler tool chain.
+In this series, my aim is to explore the state of the art in build tools
+and document my experience. Let me start with the last tool I worked with
+in this space (of building artefacts from source written in a variety of
+languages).
 
-Before I go any further, let me confess: the title is a clickbait. There
-is no such thing as a perfect build system. I have not found one yet that
-is free from warts, quirks, and kinks; so far. But that should not
-stop us from looking for it.
+[`Waf`](^1) is an elegant build system that I extensively used in my last
+start up. With little to no training, the team could comfortably write
+*Waf* scripts using its API; the scripting language was `Python`! It was
+really cool to write code that builds code. Compared to a Makefile, in my
+opinion, the *Waf* scripts were more readable and maintainable for any
+one coming in contact with it many moons later. 
+
+As an added bonus, since an instance of *Waf* is committed into version
+control post install, developers can simply checkout the repo and start
+building the project without having to install any additional tools other
+than the standard compiler tool chain. This worked well and let us *develop* 
+complex build pipelines to automate tasks that could generate a gamut
+of artefacts.
 
 Reality of modern software development is that we have to deal with dozens
-of dependencies that come with their own build systems, and *waf* to my
-knowledge doesn't handle integration with those dependencies well. My
-recollection is that you end up writing a bunch of Python code to work
-with third-party dependencies, which if written poorly can slow down the
-build process.
+of dependencies that come with their own build systems and often we had
+to spawn processes to build these dependencies using their native build
+setup. This resulted in unstructured and undocumented build steps in the
+code, and since this code is not the product it would not receive enough
+scrutiny for correctness. If left unchecked the entire build process would
+slow down. Part of my job was to review and clean up the scripts and 
+ensure that Waf was informed of the process spawning to create an optimal
+execution plan. 
 
 > [!NOTE]
-> It's possible that *waf* may have addressed the kind of issues I had
-> using it almost a decade ago. Even otherwise, I think *waf* is a fine
-> tool that gets you going for small to medium projects and a worthwhile
-> alternative to have in your toolbox.
+> It's not *Waf*'s fault for making it easy for developers to spawn
+> processes willy-nilly. I think *waf* is a fine tool that gets you
+> going for small to medium projects and a worthwhile alternative to
+> have in your toolbox.
 
-If performance is the main concern then a two step build pipeline is
+As systems get more complex, build performance becomes a major concern.
+It is hard to change the build system once it gets established. Choosing
+wisely at the offset of a project start can literally save big bucks by
+minimizing down time for developers.
+
+When performance is the driving factor, a two step build pipeline is
 arguably the way to go. The first step generates a build file and the
 second step runs the build file with as much parallelism as possible. 
 This two step process was made popular by a tool named `ninja` which
-takes charge of the **second** step. 
+takes charge of the *second* step.
 
-Ninja was designed with constraints of what it can do, what it wants to
-do and what it does to a very narrow scope which is to compile a large
-code base fast by chomping through one or more assembly file(s) that
-contain sequence of instructions. 
+Ninja is designed to limit its scope to the business of compiling large
+code bases fast by chomping through one or more assembly file(s) that
+contain sequence of instructions. While such assembly file(s) can be 
+written by hand, it gets tricky and feels like grunt work very quickly.
+Ninja leaves the DX of creating such files to *meta build tools* such as
+`cmake` and `meson` among others, which provide higher order constructs
+that get transformed into the assembly of instructions for *ninja* which
+then builds the artefacts (executables, libraries, docs, ...).
 
-While such assembly file(s) can be written by hand, it can get tricky
-and feels like grunt work very quickly. Ninja leaves the DX of creating
-such files to meta build tools such as `cmake` and `meson` among others,
-which provide higher order constructs that get transformed into the 
-assembly of instructions for *ninja* which then builds the artefacts
-(executables, libraries, docs, ...).
-
-For step 1, the most popular choice is *cmake*. But `CMakeLists.txt`
+For step one, the most popular choice is *cmake*. But `CMakeLists.txt`
 syntax is simply not for me; it gives me allergies. I get it that it is
 a DSL. The moment I see syntax for functions, loops and conditionals that
 look like wild mushrooms, I am signing out. I mean why oh why? At that
@@ -309,15 +322,6 @@ Speaking of opinions I have a few of my own from the whole ordeal.
 - Weak sauce argument on why they chose to make *meson.build* 
   Turing-incomplete.  Do they really believe that *meson* will
   be around and `Python` will go away?
-- The script file already allows conditionals and loops, so the argument
-  for not being Turing-complete seems bogus to me.
-
-My first impression of *meson* is that it baked into its implementation
-some strong opinions that most likely were truthy at some point in time,
-and probably served the authors of *meson* well on their job. At present
-times however, it just feels odd to embrace those opinions. Either that
-or I am far removed from the nuances of what it takes to design a meta
-build tool that just works for the happy paths.
 
 I can buy into the convention over configuration argument; but I have
 a difficult time adopting conventions and configurations that have a 
@@ -333,21 +337,16 @@ How exactly is this achieved if the build script is unable to specify
 what compiler it needs without depending on the developer to read the
 docs, set the necessary exports and what not.
 
-There are many such good intents badly designed in meson. To be sure 
-however, I understand that build systems are complex, and requires an
-enormous effort and community to get it right. My ranting is in no way
-an attempt to throw shade at *meson*. I appreciate that I managed to 
-build an artefact out of an ad hoc project structure using *meson* and
-that is fricking cool.
+My ranting here is in no way an attempt to throw shade at *meson*. I 
+managed to build an artefact out of an ad hoc project structure using
+*meson* and that is to be appreciated, and I do.
 
 In summary, my hunt for a perfect build system for C/C++ projects is not
-over. I really hoped that `meson` could be it. Unfortunately it is not
-because imo it violates the `principle of least surprise` step after
-step after a mere few steps of using it.
-
-For a harried developer who just wants to build software, that is 
-increasingly becoming complex, `meson` adds complexity for no good
-reason (that my attention deficited mind can comprehend).
+over. I had hopes that it would end at `meson`. Unfortunately, it 
+violates the `principle of least surprise` step after step after a mere
+few steps of using it. For a harried developer who just wants to build
+software, that is increasingly becoming complex, `meson` adds complexity
+for no good reason (that my attention deficited mind can comprehend).
 
 ## Epilog
 To be able to override the default compiler that *meson* uses, one must

@@ -34,17 +34,17 @@ That is the topic for today.
 
 ## Learning from experience
 Getting things working with *meson* for an ad-hoc project structure
-turned out to be a wee bit of an adventure. That is to be expected
-when diving in sans planning. I did that because at the surface level
-I was able to map the the *DSL* of *meson* to that of *cmake* which I
-had experience with; how hard could that be :roll_eyes:.
+turned into a wee bit of an adventure &ndash; as expected when diving
+in sans planning. I did that because at the surface level I was
+able to map the the *DSL* of *meson* to that of *cmake* which I had
+experience with; how hard could that be :roll_eyes:.
 
 On the other hand, *gn*'s DSL at a first glance looked different enough
-for me to start with something `simple` to follow along till I got the
-hang of it. The *simple* project folder structure looks as below. The
-objective is to build a static and shared library out of `lib` folder
-and a statically linked and dynamically linked executable out of `app`
-folder.
+for me to take a pause and start with something `simple` to follow along
+till I got the hang of it. The *simple* project folder structure looks as 
+below. The objective is to build a static and shared library out of `lib`
+folder and a statically linked and dynamically linked executable out of
+`app` folder.
 
  ```bash
 simple
@@ -66,16 +66,16 @@ simple
 ```
 
 I started with the [quick start document](^1) and worked my way through
-to create the `simple` structure.
-
-The general concepts in *gn* are similar to *cmake* and *meson*. Create 
-a directory structure that breaks the system into subsystems, functional
-blocks (features) and modules (components); and then describe what each
-folder contains in a `BUILD.gn` file in that folder. Each target (defined
-in *BUILD.gn*) can be referenced as a dependency by others, and the target
-can declare its own dependencies. At the top level, create one or more
-`group` of features and declare the dependencies for each. The `group`
-name can also be a target that can be used to direct `ninja` what to *build*.
+to create the `simple` structure. At the end of this exercise I had a
+map of *gn* concepts that I could relate to similar kind in *cmake* and
+*meson*. Broadly, the process is to create a directory structure that 
+breaks the system into subsystems, functional blocks (features) and
+modules (components); and then describe what each folder contains in 
+a `BUILD.gn` file in that folder. Each target (defined in *BUILD.gn*)
+can be referenced as a dependency by others, and the target can declare
+its own dependencies. At the top level, create one or more `group` of
+features and declare the dependencies for each. The `group` name can
+also be a target that can be used to direct `ninja` what to *build*.
 
 > [!TIP]
 > Remember to design your build like code.
@@ -83,7 +83,7 @@ name can also be a target that can be used to direct `ninja` what to *build*.
 
 The first thing I took note of and appreciated is that *gn* automatically
 looks for and picks up the values in `.gn` file unlike *meson*'s 
-`--native-file` option. In fact it provides a help message that is 
+`--native-file` option. In fact it provides a help message that was 
 somehow reassuring (to me).
 
 ```bash
@@ -103,10 +103,9 @@ $ gn gen out/simple
 $ ninja -C out/simple
 ```
 
-Now that the basic objective has been met, I felt a bit more adventurous.
-My first venturing on my own into the *gn* world was to figure out how
-keep my *BUILD.gn* files `DRY`. Here is what I mean; the first iteration
-of my `app`'s *BUILD.gn* looked as below:
+With the basic objective met, I was feeling adventurous. So I ventured
+to figure out how to keep my *BUILD.gn* files `DRY`. Here is what I mean;
+the first iteration of my `app`'s *BUILD.gn* looked as below:
 
 ```lua
 cflags = []

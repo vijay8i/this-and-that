@@ -202,15 +202,16 @@ work on since it is a concern of *conan*. I still would like to know if
 that is doable using *gn*, but for now I think this is good enough.
 
 ## Wrap up
-You won't find a list of pros and cons in this section for I did not
-set out to write that kind of article; heck, I didn't even think I was
-writing an article. That is not to say there aren't pros and cons when
-choosing a build system. There will always be pros and cons to anything
-we touch and use. However, I do have a few thoughts on the nature and 
-purpose of my quest.
+I wanted to document my experience in revisiting an area of software 
+development that I haven't paid attention to for a long time, and that 
+is what I did up to this point. Anything that we touch and use has pros
+and cons, and it is tempting to end with such a list and call it a wrap.
+I won't do that since my quest has been subjective from the start, and
+creating such a list would feel out of context. Instead, let me just write
+down a few thoughts on the nature and purpose of my quest.
 
 At an abstract level, I do not like products that work hard to dumbify
-the user, to the point where no one knows what a button does and why. I
+the user to the point where no one knows what a button does and why. I
 see a red flag whenever I find the word "easy" in the documentation of
 a product.
 
