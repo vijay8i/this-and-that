@@ -180,7 +180,7 @@ set_defaults("shared_library") {
 
 It works but didn't feel _DRY_ enough. In _gn_ you can declare and initialize
 variables outside a block, and use them inside a block. So instead of adding
-_//build:bleeding-edge_ to all target types, we can do this:
+_//build:bleeding-edge_ to all target types in each block, we can do this:
 
 ```lua
 shared_binary_target_configs = [
@@ -211,11 +211,10 @@ me.
 
 The last bit to check on is to ensure that the app does link to the correct
 library; i.e., static app target should use the static library and the
-dynamically linked app target should use the shared library.
-
-This is not a _gn_ issue per se. It requires the developer to set things up
-correctly and document the build defines the library user has to set in order to
-link correctly. Boring stuff, but for completeness sake here is how that looks:
+dynamically linked app target should use the shared library. This is not a _gn_
+issue per se. It requires the developer to set things up correctly and document
+the _-Ddefines_ the library user has to set in order to link correctly. Boring
+stuff, but for completeness sake here is how that looks:
 
 ```C++
 #if defined _WIN32 || defined __CYGWIN__
@@ -260,7 +259,7 @@ the user of the library to `-DSTATS_API_IS_DLL=1` to use the shared library, and
 
 Since both the library developer and the user of the library is me, and since
 this article is about using _gn_, let me just dump the `app` and `lib` targets
-here so we can wrap up on a positive note.
+here so we can wrap up the day on a positive note.
 
 First the root file `simple/BUILD.gn`...
 
@@ -275,13 +274,14 @@ group("simple") {
 }
 ```
 
-Next the bootstrap file to inform _gn_ where toolchain config is (`simple/.gn`):
+Next is to inform _gn_ where the the toolchain config in our bootstrap file
+(`simple/.gn`):
 
 ```lua
 buildconfig = "//build/BUILDCONFIG.gn"
 ```
 
-The app targets (`simple/src/app/BUILD.gn`):
+We declare our two app targets in `simple/src/app/BUILD.gn`:
 
 ```lua
 executable("app-static") {
@@ -301,7 +301,7 @@ executable("app-shared") {
 }
 ```
 
-The lib targets (`simple/src/lib/BUILD.gn`):
+And declare our lib targets in `simple/src/lib/BUILD.gn`:
 
 ```lua
 shared_library("ss-shared") {
@@ -319,7 +319,7 @@ static_library("ss-static") {
 }
 ```
 
-And we can verify that we got it right by using `otool`; here is the whole
+Finally, we can verify that we got it right by using `otool`; here is the whole
 session transcript:
 
 ```bash
