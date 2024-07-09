@@ -265,8 +265,9 @@ CC=/opt/local/bin/clang++ meson setup build
 CC_FOR_BUILD=/opt/local/bin/clang++ meson setup build
 ```
 
-> [!NOTE] See [epilog](#epilog); I did not set `CXX` and `CXX_FOR_BUILD` at this
-> step; would have saved me 30 minutes if I did properly RTFM.
+> [!NOTE]\
+> See [epilog](#epilog); I did not set `CXX` and `CXX_FOR_BUILD` at this step;
+> would have saved me 30 minutes if I did properly RTFM.
 
 I finally had to use the `--native-file` option, which at first did not work
 &mdash; for like 30 minutes I was scratching my head and feverishly searching
@@ -327,12 +328,8 @@ about reproducible builds:
 > from source, their outputs are bitwise identical to each other.
 
 This will not be the case if the developer fails to set the necessary exports
-and doesn't use _--native-file_ option, since there is not guarantee which
+and doesn't use _--native-file_ option, since there is no guarantee which
 compiler will be invoked.
-
-My ranting here is in no way an attempt to throw shade at _meson_. I managed to
-build an artefact out of an ad hoc project structure using _meson_ and that is
-to be appreciated, and I do.
 
 In summary, my hunt for a perfect build system for C/C++ projects is not over. I
 had hopes that it would end at `meson`. Unfortunately, it violates the
