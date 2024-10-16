@@ -25,6 +25,7 @@ Synthesize List:
 
 - https://github.com/wrennkieran31/Autonomous-Event-Catalog
 - https://github.com/chilit-nl/plantuml-event-modeling
+- (*) https://github.com/CodeDrivenMitch/eventmodeler
 
 ## Async API
 
